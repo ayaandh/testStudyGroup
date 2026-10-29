@@ -126,6 +126,11 @@ function renderAccount() {
   $("#workspace").hidden = !signedIn || !state.profile;
   $("#nav-workspace").hidden = !signedIn || !state.profile;
   syncAuthButtons();
+  const dashboard = signedIn && Boolean(state.profile);
+  if (document.body.classList.contains("is-signed-in") !== dashboard) {
+    document.body.classList.toggle("is-signed-in", dashboard);
+    window.scrollTo(0, 0);
+  }
   if (!signedIn) {
     $("#account-popover").hidden = true;
     return;
