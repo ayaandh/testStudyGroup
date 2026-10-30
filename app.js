@@ -2,7 +2,6 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   getRedirectResult,
-  OAuthProvider,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -26,11 +25,6 @@ let redirecting = false;
 const providerFactories = {
   google() {
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
-    return provider;
-  },
-  microsoft() {
-    const provider = new OAuthProvider("microsoft.com");
     provider.setCustomParameters({ prompt: "select_account" });
     return provider;
   }
@@ -63,8 +57,7 @@ function setAuthMode(mode) {
   $("#auth-switch").textContent = signingUp ? "Log in" : "Join for free";
   $("#forgot-password").hidden = signingUp;
   $$("[data-provider]").forEach((button) => {
-    const name = button.dataset.provider === "google" ? "Google" : "Outlook";
-    button.querySelector(".social-label").textContent = `${signingUp ? "Sign up" : "Log in"} with ${name}`;
+    button.querySelector(".social-label").textContent = `${signingUp ? "Sign up" : "Log in"} with Google`;
   });
 }
 

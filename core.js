@@ -55,7 +55,7 @@ export function fillSubjectSelects() {
 
 export function getErrorMessage(error) {
   const messages = {
-    "auth/configuration-not-found": "Sign-in is not switched on for this Firebase project yet. In the Firebase console open Authentication, press Get started, then enable Email/Password, Google and Microsoft under Sign-in method.",
+    "auth/configuration-not-found": "Sign-in is not switched on for this Firebase project yet. In the Firebase console open Authentication, press Get started, then enable Email/Password and Google under Sign-in method.",
     "auth/email-already-in-use": "There's already an account with that email. Try logging in instead.",
     "auth/invalid-email": "That email address doesn't look right. Check it and try again.",
     "auth/invalid-credential": "We couldn't sign you in with those details. Double-check your email and password.",
@@ -75,7 +75,7 @@ export function getErrorMessage(error) {
     "auth/internal-error": "Firebase hit an internal error. Check that sign-in providers are fully set up, then try again.",
     "auth/requires-recent-login": "For your security, please log out and log in again, then retry.",
     "permission-denied": "Firebase blocked this action. Check that the latest Firestore security rules have been deployed.",
-    "unavailable": "Firebase is temporarily unavailable. Please try again in a moment.",
+    "unavailable": "We couldn't reach the database. Check your connection, and make sure a Firestore database has been created in the Firebase console (Build, Firestore Database, Create database). Then try again.",
     "resource-exhausted": "The free Firebase quota has been used up for now. Try again later.",
     "failed-precondition": "Firestore needs an index or setup step for this action. Check the browser console for the link.",
     "not-found": "That item could not be found. It may have been deleted."
