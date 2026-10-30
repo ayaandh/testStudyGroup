@@ -300,12 +300,8 @@ a { color: inherit; }
   .chat-actions .button { flex: 1; }
 }
 
-body.is-signed-in .hero,
-body.is-signed-in .value-strip,
-body.is-signed-in .how-section,
-body.is-signed-in .final-cta,
-body.is-signed-in .site-nav a[href="#how-it-works"] { display: none; }
-body.is-signed-in .workspace-inner { min-height: 70vh; padding-top: 44px; }
+body.checking { visibility: hidden; }
+.workspace-inner { min-height: 70vh; }
 
 @media (min-width: 1500px) { .hero { min-height: 480px; }.hero-art { transform: scale(1.08); } }
 @media (max-width: 900px) {
