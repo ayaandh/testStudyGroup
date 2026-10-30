@@ -1,6 +1,6 @@
-import { doc, getDoc, serverTimestamp, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 import { db, state } from "./core.js";
-import { sanitizeNickname } from "./helpers.js";
+import { sanitizeNickname, weekStartKey } from "./helpers.js";
 
 export const NICKNAME_RULE = "Use 2 to 24 letters, numbers, spaces, dots, underscores or hyphens for your nickname.";
 
@@ -90,4 +90,20 @@ export async function saveProfileChoices(nickname, optIn) {
   }
   await batch.commit();
   state.profile = { ...state.profile, displayName: nickname, leaderboardOptIn: optIn };
+}
+
+export async function addWeeklyMinutes(minutes) {
+  if (!state.user || !state.profile?.leaderboardOptIn) return;
+  const reference = leaderboardReference(state.user.uid);
+  const snapshot = await getDoc(reference);
+  if (!snapshot.exists()) return;
+  const data = snapshot.data();
+  const key = weekStartKey();
+  const current = data.weekKey === key ? Number(data.weekMinutes) || 0 : 0;
+  await updateDoc(reference, { weekKey: key, weekMinutes: Math.min(6000, current + minutes) });
+}
+
+export async function saveDailyGoal(minutes) {
+  await updateDoc(profileReference(state.user), { dailyGoal: minutes });
+  state.profile = { ...state.profile, dailyGoal: minutes };
 }

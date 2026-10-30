@@ -177,3 +177,95 @@ export function formatClock(totalSeconds) {
   const seconds = String(safe % 60).padStart(2, "0");
   return `${minutes}:${seconds}`;
 }
+
+export const QUOTES = [
+  "Small steps every day beat big pushes once a month.",
+  "You don't have to feel ready. You just have to start.",
+  "Mistakes in revision are free. Make them now, learn from them now.",
+  "Ten focused minutes is better than an hour of scrolling.",
+  "Your future self is quietly cheering for you today.",
+  "Hard topics get easier the moment you stop avoiding them.",
+  "Rest is part of revising. Take the break, then come back strong.",
+  "Progress is progress, even when it feels slow.",
+  "Ask the question. Someone else in the room is wondering the same thing.",
+  "Done is better than perfect when you're building a habit.",
+  "Every flashcard you flip is a tiny win.",
+  "Be kind to yourself and keep showing up."
+];
+
+function roundOne(value) {
+  return Math.round(value * 10) / 10;
+}
+
+export function quoteOfDay(date = new Date()) {
+  const day = Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
+  return QUOTES[day % QUOTES.length];
+}
+
+export function weekStartKey(date = new Date()) {
+  const start = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay() + 6) % 7));
+  return dateKey(start);
+}
+
+export function percentOf(score, outOf) {
+  return outOf > 0 ? roundOne((score / outOf) * 100) : 0;
+}
+
+export function summariseScores(scores) {
+  const groups = new Map();
+  scores.forEach((entry) => {
+    if (!groups.has(entry.subject)) groups.set(entry.subject, []);
+    groups.get(entry.subject).push(entry);
+  });
+  return Array.from(groups, ([subject, list]) => {
+    const ordered = list.slice().sort((first, second) => (first.takenOn < second.takenOn ? -1 : first.takenOn > second.takenOn ? 1 : 0));
+    const percents = ordered.map((entry) => percentOf(entry.score, entry.outOf));
+    const total = percents.reduce((sum, value) => sum + value, 0);
+    const latest = percents[percents.length - 1];
+    const trend = percents.length >= 2 ? roundOne(latest - percents[percents.length - 2]) : 0;
+    return {
+      subject,
+      count: percents.length,
+      average: roundOne(total / percents.length),
+      best: Math.max(...percents),
+      latest,
+      trend
+    };
+  }).sort((first, second) => first.subject.localeCompare(second.subject));
+}
+
+export function computeBadges(input) {
+  const stats = input.stats;
+  const totalMinutes = input.sessions.reduce((sum, session) => sum + (Number(session.minutes) || 0), 0);
+  const doneTasks = input.tasks.filter((task) => task.done).length;
+  const cardCount = input.decks.reduce((sum, deck) => sum + (Array.isArray(deck.cards) ? deck.cards.length : 0), 0);
+  const ownsGroup = input.groups.some((group) => group.ownerId === input.uid);
+  const goal = input.goal;
+  const definitions = [
+    ["first-focus", "First focus", "Log your first focus session.", input.sessions.length, 1],
+    ["hour-power", "Hour power", "Study for 60 minutes in total.", totalMinutes, 60],
+    ["ten-hours", "Ten hour club", "Study for 600 minutes in total.", totalMinutes, 600],
+    ["streak-3", "On a roll", "Study 3 days in a row.", stats.streak, 3],
+    ["streak-7", "Week warrior", "Study 7 days in a row.", stats.streak, 7],
+    ["goal-getter", "Goal getter", "Reach your daily goal.", stats.today, goal],
+    ["task-starter", "Task starter", "Finish your first task.", doneTasks, 1],
+    ["task-master", "Task master", "Finish 25 tasks.", doneTasks, 25],
+    ["deck-builder", "Deck builder", "Create your first flashcard deck.", input.decks.length, 1],
+    ["card-collector", "Card collector", "Have 50 flashcards.", cardCount, 50],
+    ["note-taker", "Note taker", "Write your first note.", input.notes.length, 1],
+    ["score-keeper", "Score keeper", "Log your first score.", input.scores.length, 1],
+    ["exam-ready", "Exam ready", "Add an exam date.", input.exams.length, 1],
+    ["team-player", "Team player", "Join a study group.", input.groups.length, 1],
+    ["group-founder", "Group founder", "Start your own group.", ownsGroup ? 1 : 0, 1],
+    ["on-the-board", "On the board", "Join the leaderboard.", input.optIn ? 1 : 0, 1]
+  ];
+  return definitions.map(([id, title, text, value, target]) => ({
+    id,
+    title,
+    text,
+    value,
+    target,
+    unlocked: value >= target,
+    progress: `${Math.min(value, target)} / ${target}`
+  }));
+}

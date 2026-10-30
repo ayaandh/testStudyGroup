@@ -75,7 +75,10 @@ async function socialSignIn(providerName) {
   try {
     await signInWithPopup(auth, provider);
   } catch (error) {
-    if (error.code === "auth/popup-closed-by-user" || error.code === "auth/cancelled-popup-request") return;
+    if (error.code === "auth/popup-closed-by-user" || error.code === "auth/cancelled-popup-request") {
+      setFormError(errorContainer, "The Google window closed before sign-in finished. Try again and let it close by itself. If it keeps happening, check that this site's address is listed under Authentication, Settings, Authorized domains in the Firebase console.");
+      return;
+    }
     if (error.code === "auth/popup-blocked" || error.code === "auth/operation-not-supported-in-this-environment") {
       try {
         await signInWithRedirect(auth, provider);
@@ -213,6 +216,7 @@ onAuthStateChanged(auth, async (user) => {
     goToDashboard();
   } catch (error) {
     console.error("Could not load the student's private StudyGroup profile.", error);
+    setFormError($("#auth-error"), getErrorMessage(error));
     showBanner(getErrorMessage(error), true);
   }
 });

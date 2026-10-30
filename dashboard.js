@@ -87,7 +87,10 @@ async function updateCheckinStatus() {
   }
 }
 
+let lastBoardLoad = 0;
+
 async function refreshBoard() {
+  lastBoardLoad = Date.now();
   await loadLeaderboard();
   await updateCheckinStatus();
 }
@@ -245,6 +248,10 @@ $("#daily-checkin").addEventListener("click", async () => {
     checkInButton.disabled = false;
     checkInButton.textContent = "Check in for today +1";
   }
+});
+
+document.addEventListener("studygroup:tab", (event) => {
+  if (event.detail === "leaderboard" && state.profile && Date.now() - lastBoardLoad > 20000) refreshBoard();
 });
 
 fillSubjectSelects();

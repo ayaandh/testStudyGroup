@@ -28,14 +28,18 @@ To test locally, serve the folder over HTTP, for example `python3 -m http.server
 ## Features
 
 - Sign up and log in with email or Google, plus password reset.
+- Overview: daily goal bar, next exam, tasks due soon, badge progress and a daily quote.
 - Planner: tasks with subject and due date, filters, overdue highlighting.
 - Focus timer: adjustable focus and break lengths, sound alert, sessions logged automatically, weekly minutes chart and day streak.
 - Flashcards: create decks from lines written as `question | answer`, shuffle, and study with a still learning queue.
-- Groups: create private groups, share a six character invite code, and chat in real time.
+- Notes: write and search notes by subject.
+- Grades: log mock and test scores, see averages per subject and whether you are improving.
 - Exams: countdown to each exam date.
+- Groups: create private groups, share a six character invite code, and chat in real time.
+- Leaderboard tab: daily check-ins and a weekly focus minutes board, nicknames only and opt in.
+- Badges: 16 achievements unlocked by using the site.
 - Resources: filter free revision sites by subject and search them.
-- Optional daily check-in leaderboard that shows nicknames only.
-- Download my data: exports your profile, tasks, sessions, decks and exams as JSON.
+- Download my data: exports your profile, tasks, sessions, decks, exams, notes and scores as JSON.
 
 ## How the pages connect
 
@@ -47,6 +51,7 @@ To test locally, serve the folder over HTTP, for example `python3 -m http.server
 - `index.html`, `app.js`: landing page, sign up, log in and the Google button.
 - `dashboard/index.html`, `dashboard.js`: the signed-in dashboard.
 - `workspace.js`: planner, timer, flashcards, groups and exams.
+- `insights.js`, `notes.js`, `grades.js`: overview, badges, notes and grade tracking.
 - `session.js`: profile creation and saving, shared by both pages.
 - `leaderboard.js`, `resources.js`: shared by both pages.
 - `core.js`: Firebase setup, shared state and error messages.
@@ -58,8 +63,8 @@ Run the tests with `node --test tests/helpers.test.mjs`.
 
 ## Data
 
-- `users/{uid}`: nickname and leaderboard setting. Subcollections `tasks`, `sessions`, `decks` and `exams` hold the workspace. Only that account can read or write them.
-- `publicLeaderboard/{uid}`: exists only for students who opt in. It holds a nickname, a check-in score and timestamps, never an email address.
+- `users/{uid}`: nickname and leaderboard setting. Subcollections `tasks`, `sessions`, `decks`, `exams`, `notes` and `scores` hold the workspace. Only that account can read or write them.
+- `publicLeaderboard/{uid}`: exists only for students who opt in. It holds a nickname, a check-in score, this week's focus minutes and timestamps, never an email address.
 - `groups/{id}`: group name, subject, invite code and member ids. Only members can read it. `messages` inside a group are readable and writable by members only.
 - `groupCodes/{code}`: maps an invite code to its group so people can join.
 

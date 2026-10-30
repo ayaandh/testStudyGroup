@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  computeBadges,
   computeStats,
   daysUntil,
   describeCountdown,
@@ -9,9 +10,13 @@ import {
   formatClock,
   makeCode,
   parseCards,
+  percentOf,
+  quoteOfDay,
   sanitizeNickname,
   shuffle,
-  validNickname
+  summariseScores,
+  validNickname,
+  weekStartKey
 } from "../helpers.js";
 
 test("sanitizeNickname strips unsupported characters and falls back", () => {
@@ -85,4 +90,56 @@ test("escapeHTML and formatClock", () => {
   assert.equal(formatClock(1500), "25:00");
   assert.equal(formatClock(61), "01:01");
   assert.equal(formatClock(-4), "00:00");
+});
+
+test("weekStartKey returns the Monday of the week", () => {
+  assert.equal(weekStartKey(new Date(2026, 9, 29)), "2026-10-26");
+  assert.equal(weekStartKey(new Date(2026, 9, 26)), "2026-10-26");
+  assert.equal(weekStartKey(new Date(2026, 10, 1)), "2026-10-26");
+});
+
+test("summariseScores averages per subject and reports the trend", () => {
+  const rows = summariseScores([
+    { subject: "Maths", score: 40, outOf: 80, takenOn: "2026-09-01" },
+    { subject: "Maths", score: 60, outOf: 80, takenOn: "2026-10-01" },
+    { subject: "Biology", score: 30, outOf: 60, takenOn: "2026-10-05" }
+  ]);
+  assert.equal(rows.length, 2);
+  assert.equal(rows[0].subject, "Biology");
+  const maths = rows[1];
+  assert.equal(maths.average, 62.5);
+  assert.equal(maths.best, 75);
+  assert.equal(maths.trend, 25);
+  assert.equal(percentOf(1, 3), 33.3);
+});
+
+test("computeBadges unlocks badges from real activity", () => {
+  const stats = { streak: 3, today: 45, open: 0, week: 100, bars: [] };
+  const badges = computeBadges({
+    stats,
+    goal: 30,
+    uid: "me",
+    optIn: true,
+    sessions: [{ minutes: 30 }, { minutes: 35 }],
+    tasks: [{ done: true }, { done: false }],
+    decks: [{ cards: [1, 2, 3] }],
+    exams: [],
+    groups: [{ ownerId: "me" }],
+    notes: [],
+    scores: []
+  });
+  const byId = Object.fromEntries(badges.map((badge) => [badge.id, badge]));
+  assert.equal(byId["hour-power"].unlocked, true);
+  assert.equal(byId["ten-hours"].unlocked, false);
+  assert.equal(byId["streak-3"].unlocked, true);
+  assert.equal(byId["streak-7"].unlocked, false);
+  assert.equal(byId["goal-getter"].unlocked, true);
+  assert.equal(byId["group-founder"].unlocked, true);
+  assert.equal(byId["card-collector"].progress, "3 / 50");
+  assert.equal(byId["note-taker"].unlocked, false);
+});
+
+test("quoteOfDay is stable for a given day", () => {
+  assert.equal(quoteOfDay(new Date(2026, 9, 29, 8)), quoteOfDay(new Date(2026, 9, 29, 22)));
+  assert.equal(typeof quoteOfDay(), "string");
 });

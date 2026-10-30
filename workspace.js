@@ -16,6 +16,10 @@ import {
   writeBatch
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 import { $, $$, db, getErrorMessage, showBanner, showToast, state } from "./core.js";
+import { clearData, initInsights, setData } from "./insights.js";
+import { startGrades, stopGrades } from "./grades.js";
+import { startNotes, stopNotes } from "./notes.js";
+import { addWeeklyMinutes } from "./session.js";
 import {
   computeStats,
   dateKey,
@@ -429,6 +433,7 @@ async function logSession(minutes) {
     subject: $("#timer-subject").value,
     createdAt: serverTimestamp()
   });
+  addWeeklyMinutes(minutes).catch((error) => console.error("The weekly leaderboard minutes could not be updated.", error));
 }
 
 function completeTimer() {
@@ -548,6 +553,7 @@ function activateTab(name) {
   } catch (error) {
     console.error("The selected tab could not be remembered.", error);
   }
+  document.dispatchEvent(new CustomEvent("studygroup:tab", { detail: name }));
 }
 
 function plain(value) {
@@ -567,7 +573,7 @@ export async function exportData() {
       leaderboardOptIn: Boolean(state.profile?.leaderboardOptIn)
     }
   };
-  for (const name of ["tasks", "sessions", "decks", "exams"]) {
+  for (const name of ["tasks", "sessions", "decks", "exams", "notes", "scores"]) {
     const snapshot = await getDocs(query(userCollection(name), limit(500)));
     result[name] = snapshot.docs.map((entry) => ({ id: entry.id, ...plain(entry.data()) }));
   }
@@ -577,6 +583,7 @@ export async function exportData() {
 function bindOnce() {
   if (ws.bound) return;
   ws.bound = true;
+  initInsights();
 
   $$("[data-tab]").forEach((tab) => tab.addEventListener("click", () => activateTab(tab.dataset.tab)));
 
@@ -837,33 +844,40 @@ export function startWorkspace() {
     ws.tasks = items;
     renderTasks();
     renderStats();
+    setData("tasks", items);
   });
   listen(query(userCollection("sessions"), orderBy("createdAt", "desc"), limit(200)), (items) => {
     ws.sessions = items;
     renderSessions();
     renderStats();
+    setData("sessions", items);
   });
   listen(query(userCollection("decks"), limit(40)), (items) => {
     ws.decks = items;
     renderDecks();
+    setData("decks", items);
   });
   listen(query(userCollection("exams"), limit(40)), (items) => {
     ws.exams = items;
     renderExams();
+    setData("exams", items);
   });
   listen(query(collection(db, "groups"), where("memberIds", "array-contains", uid), limit(20)), (items) => {
     ws.groups = items;
     renderGroups();
     syncActiveGroup();
+    setData("groups", items);
   });
+  startNotes();
+  startGrades();
   setMode("focus");
-  let saved = "planner";
+  let saved = "overview";
   try {
-    saved = localStorage.getItem("studygroup-tab") || "planner";
+    saved = localStorage.getItem("studygroup-tab") || "overview";
   } catch (error) {
-    saved = "planner";
+    saved = "overview";
   }
-  activateTab($$(`[data-tab="${saved}"]`).length ? saved : "planner");
+  activateTab($$(`[data-tab="${saved}"]`).length ? saved : "overview");
 }
 
 export function stopWorkspace() {
@@ -877,6 +891,9 @@ export function stopWorkspace() {
   ws.decks = [];
   ws.exams = [];
   ws.groups = [];
+  stopNotes();
+  stopGrades();
+  clearData();
   timer.running = false;
   stopTicking();
   document.title = baseTitle;

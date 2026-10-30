@@ -68,6 +68,35 @@ service cloud.firestore {
         && textBetween(data.examDate, 10, 10);
     }
 
+    function validNote(data) {
+      return data.keys().hasOnly(['title', 'subject', 'body', 'createdAt', 'updatedAt'])
+        && data.keys().hasAll(['title', 'subject', 'body', 'createdAt', 'updatedAt'])
+        && textBetween(data.title, 1, 60)
+        && textBetween(data.subject, 1, 30)
+        && textBetween(data.body, 0, 5000);
+    }
+
+    function validScore(data) {
+      return data.keys().hasOnly(['name', 'subject', 'score', 'outOf', 'takenOn', 'createdAt'])
+        && data.keys().hasAll(['name', 'subject', 'score', 'outOf', 'takenOn', 'createdAt'])
+        && textBetween(data.name, 1, 60)
+        && textBetween(data.subject, 1, 30)
+        && data.score is number
+        && data.outOf is number
+        && data.outOf >= 1
+        && data.outOf <= 1000
+        && data.score >= 0
+        && data.score <= data.outOf
+        && textBetween(data.takenOn, 10, 10);
+    }
+
+    function validWeekly(data) {
+      return data.get('weekMinutes', 0) is int
+        && data.get('weekMinutes', 0) >= 0
+        && data.get('weekMinutes', 0) <= 6000
+        && textBetween(data.get('weekKey', '2000-01-01'), 10, 10);
+    }
+
     match /users/{userId} {
       allow read: if signedInAs(userId);
       allow create: if signedInAs(userId)
@@ -78,9 +107,12 @@ service cloud.firestore {
         && request.resource.data.createdAt == request.time;
       allow update: if signedInAs(userId)
         && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['displayName', 'leaderboardOptIn'])
+          .hasOnly(['displayName', 'leaderboardOptIn', 'dailyGoal'])
         && validNickname(request.resource.data.displayName)
         && request.resource.data.leaderboardOptIn is bool
+        && request.resource.data.get('dailyGoal', 60) is int
+        && request.resource.data.get('dailyGoal', 60) >= 10
+        && request.resource.data.get('dailyGoal', 60) <= 600
         && request.resource.data.createdAt == resource.data.createdAt;
       allow delete: if signedInAs(userId);
 
@@ -111,6 +143,25 @@ service cloud.firestore {
           && request.resource.data.createdAt == resource.data.createdAt;
       }
 
+      match /notes/{noteId} {
+        allow read, delete: if signedInAs(userId);
+        allow create: if signedInAs(userId)
+          && validNote(request.resource.data)
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time;
+        allow update: if signedInAs(userId)
+          && validNote(request.resource.data)
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      match /scores/{scoreId} {
+        allow read, delete: if signedInAs(userId);
+        allow create: if signedInAs(userId)
+          && validScore(request.resource.data)
+          && request.resource.data.createdAt == request.time;
+      }
+
       match /exams/{examId} {
         allow read, delete: if signedInAs(userId);
         allow create: if signedInAs(userId)
@@ -133,8 +184,9 @@ service cloud.firestore {
         && request.resource.data.joinedAt == request.time;
       allow update: if signedInAs(userId)
         && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['displayName', 'points', 'lastPointAt'])
+          .hasOnly(['displayName', 'points', 'lastPointAt', 'weekKey', 'weekMinutes'])
         && validNickname(request.resource.data.displayName)
+        && validWeekly(request.resource.data)
         && request.resource.data.joinedAt == resource.data.joinedAt
         && (
           (

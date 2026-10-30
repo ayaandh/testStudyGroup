@@ -47,6 +47,18 @@ export function setFormError(element, message) {
   element.hidden = !message;
 }
 
+export async function runSafely(task, button) {
+  if (button) button.disabled = true;
+  try {
+    await task();
+  } catch (error) {
+    console.error("StudyGroup action failed.", error);
+    showToast(getErrorMessage(error));
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
 export function fillSubjectSelects() {
   $$("select[data-subjects]").forEach((select) => {
     select.innerHTML = SUBJECTS.map((subject) => `<option value="${subject}">${subject}</option>`).join("");
