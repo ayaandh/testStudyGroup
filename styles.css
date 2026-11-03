@@ -395,35 +395,34 @@ body.checking { visibility: hidden; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
 
-/* StudyGroup Academy community and library additions */
-.library-results{display:grid;gap:9px;margin-top:14px}.library-resource{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px;border:1px solid #eeeae2;border-radius:9px}.library-resource h3{margin:5px 0;font:700 14px Manrope,sans-serif}.library-resource p{margin:0;color:#888;font-size:10px}.library-tag{font-size:8px;letter-spacing:1px;color:#a16a3c;font-weight:700}.resource-reader h1{font:800 28px Manrope;margin:9px 0 0}.resource-reader-head{display:flex;align-items:center;justify-content:space-between;gap:15px}.resource-content{margin-top:20px}.pdf-page{border-top:1px solid #eeeae2;padding:15px 0;line-height:1.7}.pdf-page h2{font:700 13px Manrope;color:#9b704c}.pdf-page p{font-size:13px;white-space:pre-wrap;margin:5px 0}.resource-reader{padding:24px}
-
-/* StudyGroup Academy visual refresh: colour, depth and the supplied PNG watermark. */
-:root{--canvas:#f5f3fb;--paper:#fff;--ink:#24233a;--muted:#77758b;--line:#e8e3f1;--amber:#ffbd59;--green:#579b83;--academy-purple:#7864bd;--academy-coral:#e98272;--academy-blue:#6d9fd1}
-body{background:linear-gradient(180deg,#f7f5fc 0%,#fffaf5 46%,#f5f8ff 100%);color:var(--ink)}
-.site-header{position:sticky;isolation:isolate;overflow:hidden;background:linear-gradient(100deg,#fffdf9f5,#f4f0fff2 58%,#eff7fff2);border-bottom:1px solid #e6def2;box-shadow:0 5px 22px #51417a0b}
-.site-header::after{content:"";position:absolute;z-index:-1;right:4%;top:50%;width:205px;height:52px;transform:translateY(-50%);background:url('/assets/watwermark.png') center/contain no-repeat;opacity:.12;pointer-events:none}
-.site-header .brand img{filter:drop-shadow(0 3px 5px #42315d12)}
-.site-nav a{color:#655d80}.site-nav a:hover{color:#9a5d9e}
-.button-dark{background:linear-gradient(115deg,#34304e,#62528f);box-shadow:0 5px 14px #5a4b8b24}.button-dark:hover{background:linear-gradient(115deg,#4a416d,#7964b5)}
-.button-light{background:#f1edfb;color:#5e508c;border:1px solid #e3dcf4}.button-quiet{color:#6d6190}
-.site-footer{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(100deg,#f5f0ff,#fff7ee 55%,#eef7ff);border-top:1px solid #e7def2}
-.site-footer::before{content:"";position:absolute;z-index:-1;right:5%;top:50%;width:min(250px,36vw);height:64px;transform:translateY(-50%);background:url('/assets/watwermark.png') center/contain no-repeat;opacity:.13;pointer-events:none}
-.site-footer>span,.site-footer>a:last-child{color:#77718e}.site-footer>span b,.site-footer>a:last-child span{color:#db8d55}
-.card,.leaderboard-card,.academy-library,.community-card,.maths-question-card{border-color:#e6def1;box-shadow:0 14px 38px #4b3b7610}
-.card h3,.community-card h3{color:#34304d}.eyebrow{color:#8174a5}.eyebrow>span:first-child{background:#e58c72}
-.tab{border-color:#e6def1;background:#fff;color:#716b87}.tab.is-active{background:linear-gradient(120deg,#eee8ff,#fcece7);border-color:#d7c9f0;color:#51427e;box-shadow:0 4px 12px #6f5a9a14}
-.chip.is-active{background:#eee8ff;color:#66528f;border-color:#d9cef2}
-.stat:nth-child(1){background:#f0eaff}.stat:nth-child(2){background:#e8f5ef}.stat:nth-child(3){background:#fff0e8}.stat:nth-child(4){background:#eaf3ff}
-.leaderboard-card{background:linear-gradient(145deg,#fff,#f7f3ff)}.leaderboard-row.is-you{background:#f4efff}.leaderboard-avatar-1{background:#fce8cf}.leaderboard-avatar-2{background:#e9e1ff}.leaderboard-avatar-3{background:#ddf1e8}.leaderboard-avatar-4{background:#ffe4df}
-.public-profile-page{background:linear-gradient(145deg,#f2edff,#fff8f0 55%,#edf6ff)}
-@media(max-width:700px){.site-header::after{right:2%;width:115px;height:30px;opacity:.08}.site-footer::before{right:2%;width:140px;height:40px}}
-
-/* GCSE maths practice engine */
-.maths-practice-panel{padding:clamp(16px,3vw,30px);border:1px solid #e7def4;border-radius:18px;background:linear-gradient(135deg,#fff 0%,#f7f2ff 55%,#fff5ee 100%);box-shadow:0 16px 42px #4c39750d}
-.practice-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}.practice-heading h2{margin:10px 0 7px;font:800 clamp(25px,4vw,37px) Manrope,sans-serif;letter-spacing:-1.5px;color:#332d50}.practice-heading h2 em{font-family:Georgia,serif;font-weight:400;color:#a06f9c}.practice-heading p{max-width:610px;margin:0;color:#77718a;font-size:12px;line-height:1.7}.practice-score{display:grid;gap:4px;flex:0 0 auto;border:1px solid #e2d8f3;border-radius:12px;padding:13px 16px;background:#fff}.practice-score strong{font:800 18px Manrope;color:#65528f}.practice-score small{color:#89839a;font-size:10px}.practice-controls{display:flex;align-items:end;gap:12px;margin:23px 0 14px;padding:14px;border:1px solid #e8e0f2;border-radius:12px;background:#ffffffb8}.practice-controls label{display:grid;gap:6px;min-width:145px;color:#68617f;font-size:10px;font-weight:700}.practice-controls select,.maths-answer-label input{border:1px solid #ddd4ed;border-radius:8px;padding:11px;background:#fff;color:#37314f;font:inherit}.practice-syllabus{margin-left:auto;color:#8c829f;font-size:10px}.maths-question-card{border:1px solid #e5dcf2;border-radius:16px;padding:clamp(18px,3vw,30px);background:#fff;box-shadow:0 10px 28px #5440790d}.maths-question-top{display:flex;align-items:center;justify-content:space-between;color:#8a76b5;font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}.question-spark{display:grid;width:31px;height:31px;place-items:center;border-radius:10px;background:#fff0e5;color:#d88a5f;font-size:17px}.maths-question-card h3{max-width:760px;margin:22px 0 24px;font:700 clamp(19px,3vw,27px) Manrope,sans-serif;line-height:1.5;color:#302c47}.maths-answer-label{display:grid;gap:7px;max-width:300px;color:#655d7c;font-size:11px;font-weight:700}.maths-answer-label input{font-size:15px}.maths-question-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.maths-feedback{min-height:20px;margin:14px 0 0;color:#6b5a91;font-size:12px;font-weight:700}.maths-working{margin-top:10px;padding:14px;border:1px solid #dceee4;border-radius:10px;background:#f0faf4;color:#426f5c;font-size:12px;line-height:1.7;white-space:pre-wrap}.maths-share-status,.practice-footnote{color:#88829a;font-size:10px;line-height:1.6}.practice-footnote{margin:13px 0 0}.maths-share-status{margin:5px 0 0}
-@media(max-width:700px){.practice-heading{align-items:flex-start;flex-direction:column}.practice-score{width:100%}.practice-controls{align-items:stretch;flex-direction:column}.practice-controls label{min-width:0}.practice-syllabus{margin-left:0}.maths-question-actions .button{flex:1}.maths-practice-panel{padding:13px}}
-
-.google-g-mark{display:grid;width:17px;height:17px;place-items:center;border-radius:50%;background:conic-gradient(from -45deg,#4285f4 0 27%,#34a853 27% 48%,#fbbc05 48% 70%,#ea4335 70% 100%);color:#fff;font:800 11px Arial,sans-serif;text-shadow:0 1px 2px #3336}
-
-.site-header::after,.site-footer::before{mix-blend-mode:multiply}
+/* Planner and Zip Math additions, intentionally using the original StudyGroup palette. */
+.planner-intro { display:flex; align-items:center; justify-content:space-between; gap:22px; margin:2px 0 19px; }
+.planner-intro h3 { margin:8px 0 5px; font:600 21px Manrope,sans-serif; letter-spacing:-.7px; }
+.planner-intro p { max-width:510px; margin:0; color:#85857e; font-size:10px; line-height:1.8; }
+.planner-summary { display:grid; min-width:125px; gap:4px; border:1px solid #e9e8e1; border-radius:7px; padding:13px; background:#fff; text-align:center; }
+.planner-summary strong { color:#9b7947; font:700 21px Manrope,sans-serif; }.planner-summary small { color:#85857e; font-size:8px; }
+.planner-form { grid-template-columns: minmax(180px,2fr) 1fr 1fr 1fr 90px auto; }
+.planner-guidance { display:flex; align-items:flex-start; gap:9px; margin:12px 0 19px; border:1px solid #eee8dc; border-radius:6px; padding:10px 12px; background:#faf7f0; color:#77766f; font-size:9px; line-height:1.7; }
+.planner-guidance > span:first-child { color:#b18b50; font-size:14px; }.planner-guidance strong { margin-right:5px; color:#49483f; }
+.task .item-main small { line-height:1.7; }
+.zip-math-panel { padding:0 !important; overflow:hidden; }
+.zip-hero { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:27px 29px 23px; background:#f4f0e7; }
+.zip-hero h2 { margin:8px 0 5px; font:600 clamp(29px,4vw,40px) Manrope,sans-serif; letter-spacing:-1.8px; }.zip-hero h2 em { color:#9b8c71; font:italic 400 1em Georgia,serif; }
+.zip-hero p { max-width:560px; margin:0; color:#77766f; font-size:10px; line-height:1.8; }
+.zip-mark { display:grid; width:74px; height:74px; flex:0 0 74px; place-items:center; border:7px solid #272721; border-radius:50%; background:#f3bb64; color:#343128; font:italic 33px Georgia,serif; }
+.zip-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; border-bottom:1px solid var(--line); background:var(--line); }
+.zip-stats > div { display:grid; gap:3px; padding:13px 17px; background:#fff; }.zip-stats strong { font:700 20px Manrope,sans-serif; }.zip-stats small { color:#85857e; font-size:8px; }
+.zip-practice-layout { display:grid; grid-template-columns:220px minmax(0,1fr); gap:17px; padding:20px; }
+.zip-controls,.zip-question-card { border:1px solid #e9e8e1; border-radius:7px; padding:17px; background:#fff; }
+.zip-controls h3 { margin:0 0 14px; font:700 12px Manrope,sans-serif; }.zip-controls label,.zip-answer-label { display:grid; gap:6px; margin:12px 0; color:#77766f; font-size:8px; font-weight:600; }
+.zip-controls select,.zip-answer-row input { width:100%; min-height:36px; border:1px solid #e7e5de; border-radius:5px; padding:0 10px; background:#fff; color:var(--ink); font-size:10px; }
+.zip-controls .button { width:100%; margin-top:8px; }.zip-controls p { margin:13px 0 0; color:#92918a; font-size:8px; line-height:1.7; }
+.zip-question-top { display:flex; align-items:center; justify-content:space-between; gap:10px; color:#9b9385; font-size:7px; font-weight:700; letter-spacing:.8px; }.zip-question-top span:last-child { border-radius:20px; padding:5px 8px; background:#f0edf8; color:#766b92; letter-spacing:0; }
+.zip-question-card h3 { min-height:75px; margin:21px 0 18px; font:600 clamp(17px,2.2vw,23px) Manrope,sans-serif; letter-spacing:-.5px; line-height:1.45; }
+.zip-answer-row { display:flex; gap:8px; }.zip-answer-row input { max-width:300px; min-height:40px; font-size:13px; }.zip-answer-row .button { min-height:40px; }
+.zip-text-button { margin-top:11px; border:0; padding:4px 0; background:none; color:#92764b; font-size:9px; text-decoration:underline; cursor:pointer; }
+.zip-feedback { margin-top:16px; border-radius:6px; padding:12px; }.zip-feedback.is-right { background:#edf4eb; color:#52734f; }.zip-feedback.is-wrong { background:#fbefea; color:#925d4a; }.zip-feedback strong { font-size:11px; }.zip-feedback p { margin:5px 0 0; font-size:9px; line-height:1.7; }
+.zip-worked { margin:10px 0 14px; border-left:2px solid #d5b77d; padding:8px 11px; background:#faf8f3; color:#5f5b51; font-size:10px; line-height:1.8; }
+.zip-disclaimer { margin:0; border-top:1px solid var(--line); padding:12px 20px; color:#92918a; font-size:8px; line-height:1.7; }
+@media(max-width:800px) { .planner-form { grid-template-columns:1fr 1fr; }.planner-form input:first-child { grid-column:1/-1; }.zip-practice-layout { grid-template-columns:1fr; } }
+@media(max-width:520px) { .planner-intro { align-items:flex-start; flex-direction:column; }.planner-summary { width:100%; }.zip-hero { padding:20px 16px; }.zip-mark { width:55px;height:55px;flex-basis:55px;border-width:5px;font-size:25px; }.zip-stats strong { font-size:17px; }.zip-stats > div { padding:10px; }.zip-practice-layout { padding:12px; }.zip-answer-row { flex-direction:column; }.zip-answer-row input { max-width:none; } }

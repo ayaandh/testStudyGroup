@@ -1,7 +1,6 @@
 {
   "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "rules": "firestore.rules"
   },
   "hosting": {
     "public": ".",
@@ -12,12 +11,6 @@
       "tests/**",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/**",
-        "destination": "/profile.html"
-      }
     ]
   }
 }

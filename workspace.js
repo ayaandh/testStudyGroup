@@ -20,6 +20,7 @@ import { clearData, initInsights, setData } from "./insights.js";
 import { startGrades, stopGrades } from "./grades.js";
 import { startNotes, stopNotes } from "./notes.js";
 import { addWeeklyMinutes } from "./session.js";
+import { initZipMath } from "./zip-math.js";
 import {
   computeStats,
   dateKey,
@@ -113,6 +114,8 @@ function renderStats() {
 function sortTasks(tasks) {
   return tasks.slice().sort((first, second) => {
     if (first.done !== second.done) return first.done ? 1 : -1;
+    const priority = { high: 0, normal: 1, low: 2 };
+    if ((priority[first.priority] ?? 1) !== (priority[second.priority] ?? 1)) return (priority[first.priority] ?? 1) - (priority[second.priority] ?? 1);
     const firstDue = first.due || "9999-12-31";
     const secondDue = second.due || "9999-12-31";
     if (firstDue !== secondDue) return firstDue < secondDue ? -1 : 1;
@@ -126,6 +129,9 @@ function renderTasks() {
   $$("[data-task-filter]").forEach((chip) => chip.classList.toggle("is-active", chip.dataset.taskFilter === filter));
   $("#clear-done").hidden = !ws.tasks.some((task) => task.done);
   const list = $("#task-list");
+  const planned = ws.tasks.filter(task => !task.done).reduce((sum, task) => sum + (Number(task.minutes) || 25), 0);
+  const plannedNode = $("#planner-remaining");
+  if (plannedNode) plannedNode.textContent = planned >= 60 ? `${Math.floor(planned / 60)}h ${planned % 60 ? `${planned % 60}m` : ""}`.trim() : `${planned} min`;
   if (visible.length === 0) {
     list.innerHTML = emptyMarkup("✳", "Nothing here yet", filter === "done" ? "Finished tasks will show up here." : "Add a task above to plan your next small step.");
     return;
@@ -134,7 +140,7 @@ function renderTasks() {
     const overdue = !task.done && task.due && describeDue(task.due).startsWith("Overdue");
     return `<div class="item task${task.done ? " is-done" : ""}${overdue ? " is-overdue" : ""}">
       <button class="check" type="button" data-task-toggle="${task.id}" aria-label="${task.done ? "Mark as not done" : "Mark as done"}">${task.done ? "✓" : ""}</button>
-      <div class="item-main"><strong>${escapeHTML(task.title)}</strong><small>${escapeHTML(task.subject)} · ${escapeHTML(describeDue(task.due))}</small></div>
+      <div class="item-main"><strong>${escapeHTML(task.title)}</strong><small>${escapeHTML(task.subject)} · ${escapeHTML(describeDue(task.due))} · ${Number(task.minutes) || 25} min · ${escapeHTML(task.priority || "normal")} priority</small></div>
       <button class="icon-btn" type="button" data-task-delete="${task.id}" aria-label="Delete task">×</button>
     </div>`;
   }).join("");
@@ -240,8 +246,7 @@ function renderMessages(items) {
   box.innerHTML = ordered.length
     ? ordered.map((message) => `<div class="msg${message.uid === state.user.uid ? " mine" : ""}">
         <small>${escapeHTML(message.name)}${message.date ? ` · ${formatTime(message.date)}` : ""}</small>
-        ${message.text ? `<p>${escapeHTML(message.text)}</p>` : ""}
-        ${message.attachmentText ? `<div class="shared-attachment"><small>SHARED QUESTION / NOTES</small><p>${escapeHTML(message.attachmentText)}</p></div>` : ""}
+        <p>${escapeHTML(message.text)}</p>
       </div>`).join("")
     : '<div class="chat-hint">No messages yet. Say hello to your group.</div>';
   if (nearBottom || ws.chatFirstRender) box.scrollTop = box.scrollHeight;
@@ -383,7 +388,7 @@ function renderTimer() {
   $("#timer-ring").style.setProperty("--progress", `${((timer.total - remaining) / timer.total) * 100}%`);
   $("#timer-ring").dataset.mode = timer.mode;
   $("#timer-log").hidden = timer.mode !== "focus";
-  document.title = timer.running ? `${clock} ${label} | StudyGroup Academy` : baseTitle;
+  document.title = timer.running ? `${clock} ${label} | StudyGroup` : baseTitle;
 }
 
 function setMode(mode) {
@@ -599,11 +604,15 @@ function bindOnce() {
         title,
         subject: form.elements.subject.value,
         due: form.elements.due.value || "",
+        priority: form.elements.priority?.value || "normal",
+        minutes: Number(form.elements.minutes?.value) || 25,
         done: false,
         createdAt: serverTimestamp()
       });
       form.elements.title.value = "";
       form.elements.due.value = "";
+      if (form.elements.priority) form.elements.priority.value = "normal";
+      if (form.elements.minutes) form.elements.minutes.value = "25";
       form.elements.title.focus();
     }, event.submitter);
   });
@@ -823,16 +832,13 @@ function bindOnce() {
     event.preventDefault();
     const form = event.currentTarget;
     const text = form.elements.text.value.trim();
-    const attachmentText = form.elements.attachmentText.value.trim();
-    if ((!text && !attachmentText) || !ws.activeGroupId || !state.user) return;
+    if (!text || !ws.activeGroupId || !state.user) return;
     form.elements.text.value = "";
-    form.elements.attachmentText.value = "";
     run(async () => {
       await addDoc(collection(db, "groups", ws.activeGroupId, "messages"), {
         uid: state.user.uid,
         name: state.profile?.displayName || "Study buddy",
         text: text.slice(0, 500),
-        attachmentText: attachmentText.slice(0, 3500),
         createdAt: serverTimestamp()
       });
     });
@@ -874,6 +880,7 @@ export function startWorkspace() {
   });
   startNotes();
   startGrades();
+  initZipMath();
   setMode("focus");
   let saved = "overview";
   try {

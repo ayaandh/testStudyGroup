@@ -74,9 +74,6 @@ export function ensureUserProfile(user) {
 export async function saveProfileChoices(nickname, optIn) {
   const publicReference = leaderboardReference(state.user.uid);
   const publicSnapshot = await getDoc(publicReference);
-  const publicProfileSnapshot = state.profile?.username
-    ? await getDoc(doc(db, "publicProfiles", state.profile.username))
-    : null;
   const batch = writeBatch(db);
   batch.update(profileReference(state.user), { displayName: nickname, leaderboardOptIn: optIn });
   if (optIn && publicSnapshot.exists()) {
@@ -90,9 +87,6 @@ export async function saveProfileChoices(nickname, optIn) {
     });
   } else if (publicSnapshot.exists()) {
     batch.delete(publicReference);
-  }
-  if (publicProfileSnapshot?.exists()) {
-    batch.update(doc(db, "publicProfiles", state.profile.username), { displayName: nickname, updatedAt: serverTimestamp() });
   }
   await batch.commit();
   state.profile = { ...state.profile, displayName: nickname, leaderboardOptIn: optIn };

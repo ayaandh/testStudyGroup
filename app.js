@@ -44,7 +44,7 @@ function setAuthMode(mode) {
   $("#auth-title").textContent = signingUp ? "Find your people." : "Welcome back.";
   $("#auth-intro").textContent = signingUp
     ? "Create your free account and make yourself at home."
-    : "Log in to your free StudyGroup Academy account.";
+    : "Log in to your free StudyGroup account.";
   $("#nickname-field").hidden = !signingUp;
   $("#leaderboard-optin-field").hidden = !signingUp;
   authForm.elements.nickname.required = signingUp;
@@ -52,8 +52,8 @@ function setAuthMode(mode) {
   authForm.elements.password.autocomplete = signingUp ? "new-password" : "current-password";
   $("#auth-submit").innerHTML = signingUp
     ? "Create my free account <span>→</span>"
-    : "Log in to StudyGroup Academy <span>→</span>";
-  $("#auth-switch-copy").textContent = signingUp ? "Already have an account?" : "New to StudyGroup Academy?";
+    : "Log in to StudyGroup <span>→</span>";
+  $("#auth-switch-copy").textContent = signingUp ? "Already have an account?" : "New to StudyGroup?";
   $("#auth-switch").textContent = signingUp ? "Log in" : "Join for free";
   $("#forgot-password").hidden = signingUp;
   $$("[data-provider]").forEach((button) => {
@@ -180,7 +180,7 @@ authForm.addEventListener("submit", async (event) => {
     submitButton.disabled = false;
     submitButton.innerHTML = authMode === "signup"
       ? "Create my free account <span>→</span>"
-      : "Log in to StudyGroup Academy <span>→</span>";
+      : "Log in to StudyGroup <span>→</span>";
   }
 });
 
@@ -206,7 +206,7 @@ initResourceFilter();
 initLeaderboard();
 
 if (window.location.protocol === "file:") {
-  showBanner("Open StudyGroup Academy through Firebase Hosting or a local web server. Sign-in does not work from a file.", true);
+  showBanner("Open StudyGroup through Firebase Hosting or a local web server. Sign-in does not work from a file.", true);
 }
 
 onAuthStateChanged(auth, async (user) => {

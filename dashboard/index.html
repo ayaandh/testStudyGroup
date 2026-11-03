@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#f8f7f3" />
-    <title>Dashboard | StudyGroup Academy</title>
+    <title>Dashboard | StudyGroup</title>
     <link rel="icon" type="image/png" href="../assets/favicon.png" />
     <link rel="apple-touch-icon" href="../assets/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../styles.css" />
-    <link rel="stylesheet" href="../community.css" />
     <script type="module" src="../dashboard.js"></script>
   </head>
   <body class="checking">
     <header class="site-header">
-      <a class="brand" href="./" aria-label="StudyGroup Academy dashboard"><img src="../assets/wordmark.png" alt="StudyGroup Academy" /></a>
+      <a class="brand" href="./" aria-label="StudyGroup dashboard"><img src="../assets/wordmark.png" alt="StudyGroup" /></a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="#workspace">My workspace</a>
         <a href="#resources">Free resources</a>
@@ -27,7 +26,7 @@
           <button class="user-chip" id="account-toggle" type="button" aria-expanded="false"><span class="user-chip-avatar" id="header-initial">S</span><span id="header-name">Student</span><span class="chevron">⌄</span></button>
           <div class="account-popover" id="account-popover" hidden>
             <div class="account-email" id="account-email"></div>
-            <button type="button" data-open-settings>Settings</button>
+            <button type="button" data-open-settings>Edit your profile</button>
             <button type="button" id="download-data">Download my data</button>
             <button type="button" id="sign-out">Log out</button>
           </div>
@@ -49,15 +48,14 @@
           </div>
           <div class="tabs" role="tablist" aria-label="Workspace tools">
             <button class="tab is-active" type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
-            <button class="tab" type="button" role="tab" data-tab="practice" aria-selected="false">Maths practice</button>
             <button class="tab" type="button" role="tab" data-tab="planner" aria-selected="false">Planner</button>
+            <button class="tab" type="button" role="tab" data-tab="zip-math" aria-selected="false">Zip Math</button>
             <button class="tab" type="button" role="tab" data-tab="timer" aria-selected="false">Focus timer</button>
             <button class="tab" type="button" role="tab" data-tab="cards" aria-selected="false">Flashcards</button>
             <button class="tab" type="button" role="tab" data-tab="notes" aria-selected="false">Notes</button>
             <button class="tab" type="button" role="tab" data-tab="grades" aria-selected="false">Grades</button>
             <button class="tab" type="button" role="tab" data-tab="exams" aria-selected="false">Exams</button>
             <button class="tab" type="button" role="tab" data-tab="groups" aria-selected="false">Groups</button>
-            <button class="tab" type="button" role="tab" data-tab="community" aria-selected="false">People & messages</button>
             <button class="tab" type="button" role="tab" data-tab="leaderboard" aria-selected="false">Leaderboard</button>
             <button class="tab" type="button" role="tab" data-tab="badges" aria-selected="false">Badges</button>
           </div>
@@ -77,20 +75,17 @@
             </div>
           </div>
 
-          <div class="panel maths-practice-panel" data-panel="practice" id="maths-practice" hidden>
-            <div class="practice-heading"><div><span class="eyebrow"><span></span> THE STUDYGROUP QUESTION ENGINE</span><h2>Practise. <em>Understand.</em> Improve.</h2><p>Fresh GCSE Maths questions generated instantly from curriculum-aligned templates. No AI, no external question bank. Start with core skills and build up your confidence.</p></div><div class="practice-score"><strong id="maths-score">0 / 0 correct</strong><small>Your score this session</small></div></div>
-            <div class="practice-controls"><label>Topic<select id="maths-topic"><option>Mixed</option><option>Number</option><option>Fractions</option><option>Algebra</option><option>Ratio and proportion</option><option>Geometry</option><option>Measures</option><option>Statistics</option><option>Probability</option></select></label><label>Tier<select id="maths-tier"><option>Foundation</option><option>Higher</option></select></label><span class="practice-syllabus">GCSE Mathematics · Core syllabus skills</span></div>
-            <article class="maths-question-card"><div class="maths-question-top"><span id="maths-question-topic">Number · GCSE Foundation</span><span class="question-spark">✳</span></div><h3 id="maths-question-text">Loading your first question…</h3><label class="maths-answer-label">Your answer<input id="maths-answer" inputmode="decimal" autocomplete="off" placeholder="Type your answer" /></label><div class="maths-question-actions"><button class="button button-dark" id="maths-check" type="button">Check answer</button><button class="button button-light" id="maths-new-question" type="button">Next question ↗</button><button class="button button-quiet" id="maths-reveal" type="button">Show method</button><button class="button button-light" id="maths-share-question" type="button">Copy question to share</button></div><p id="maths-feedback" class="maths-feedback" aria-live="polite"></p><div id="maths-working" class="maths-working" hidden></div><p id="maths-share-status" class="maths-share-status" aria-live="polite"></p></article>
-            <p class="practice-footnote">Questions are generated locally from deterministic templates, not AI. This is an early GCSE Maths practice engine; topic coverage will expand across Foundation and Higher specifications and should be checked against your exam board.</p>
-          </div>
-
           <div class="panel" data-panel="planner" hidden>
-            <form class="inline-form" id="task-form">
-              <input name="title" type="text" maxlength="120" placeholder="What do you need to get done?" aria-label="Task" required />
+            <div class="planner-intro"><div><span class="eyebrow"><span></span> YOUR STUDY PLAN</span><h3>Make the next step clear.</h3><p>Break revision into manageable sessions. Add a subject, deadline and time estimate to keep your week realistic.</p></div><div class="planner-summary"><strong id="planner-remaining">0 min</strong><small>planned study time</small></div></div>
+            <form class="inline-form planner-form" id="task-form">
+              <input name="title" type="text" maxlength="120" placeholder="e.g. Practise simultaneous equations" aria-label="Task" required />
               <select name="subject" data-subjects aria-label="Subject"></select>
               <input name="due" type="date" aria-label="Due date" />
-              <button class="button button-dark" type="submit">Add task</button>
+              <select name="priority" aria-label="Priority"><option value="normal">Normal priority</option><option value="high">High priority</option><option value="low">Low priority</option></select>
+              <select name="minutes" aria-label="Estimated minutes"><option value="15">15 min</option><option value="25" selected>25 min</option><option value="40">40 min</option><option value="60">60 min</option><option value="90">90 min</option></select>
+              <button class="button button-dark" type="submit">Add to plan</button>
             </form>
+            <div class="planner-guidance"><span>✳</span><span><strong>Planning tip</strong> Aim for focused blocks with short breaks. A smaller plan you can finish beats an overloaded one.</span></div>
             <div class="filter-row">
               <button class="chip is-active" type="button" data-task-filter="all">All</button>
               <button class="chip" type="button" data-task-filter="active">To do</button>
@@ -99,6 +94,14 @@
             </div>
             <div class="item-list" id="task-list"></div>
           </div>
+
+          <section class="panel zip-math-panel" id="zip-math" data-panel="zip-math" hidden>
+            <div class="zip-hero"><div><span class="eyebrow"><span></span> STUDYGROUP ACADEMY · MATHS PRACTICE</span><h2>Zip <em>Math</em></h2><p>Short, focused GCSE maths practice. Questions are generated in your browser from built-in maths rules. No AI and no copied question bank.</p></div><div class="zip-mark">∑</div></div>
+            <div class="zip-stats"><div><strong id="zip-attempts">0</strong><small>attempts</small></div><div><strong id="zip-correct">0</strong><small>correct</small></div><div><strong id="zip-rate">—</strong><small>accuracy</small></div><div><strong id="zip-streak">0</strong><small>correct streak</small></div></div>
+            <div class="zip-practice-layout"><aside class="zip-controls"><h3>Build your practice</h3><label>Topic<select id="zip-topic"></select></label><label>Tier<select id="zip-tier"><option value="foundation">Foundation-style</option><option value="higher">Higher-style</option></select></label><button class="button button-dark" id="zip-new-set" type="button">New question</button><p>Choose a topic or use mixed practice. Each question has a worked method after you submit.</p></aside>
+              <div class="zip-question-card"><div class="zip-question-top"><span>YOUR QUESTION</span><span id="zip-question-topic">Number</span></div><h3 id="zip-question">Loading a question…</h3><label class="zip-answer-label" for="zip-answer">Your answer</label><div class="zip-answer-row"><input id="zip-answer" type="text" autocomplete="off" placeholder="Type your answer" /><button class="button button-dark" id="zip-submit" type="button">Check answer</button></div><button class="zip-text-button" id="zip-reveal" type="button">Show answer and method</button><div id="zip-feedback" class="zip-feedback" hidden><strong id="zip-feedback-title"></strong><p id="zip-feedback-copy"></p></div><div id="zip-worked" class="zip-worked" hidden></div><button class="button button-dark" id="zip-next" type="button" hidden>Next question →</button></div>
+            </div><p class="zip-disclaimer">Zip Math is an early practice engine. It currently covers selected number, fractions, percentages, ratio, algebra, sequences, geometry and probability skills. It is not yet a complete GCSE specification or a replacement for full exam papers.</p>
+          </section>
 
           <div class="panel" data-panel="timer" hidden>
             <div class="timer-layout">
@@ -159,13 +162,11 @@
                 <div class="chat-room" id="chat-room" hidden>
                   <div class="chat-head"><div><strong id="chat-title"></strong><small id="chat-meta"></small></div><div class="chat-actions"><button class="button button-light" type="button" id="copy-code">Copy invite code</button><button class="button button-light" type="button" id="leave-group">Leave group</button></div></div>
                   <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
-                  <form class="chat-form" id="chat-form"><input name="text" type="text" maxlength="500" placeholder="Message your group" autocomplete="off" aria-label="Message" /><button class="button button-dark" type="submit">Send</button><details class="chat-attach"><summary>Attach a question or notes</summary><textarea name="attachmentText" maxlength="3500" rows="3" placeholder="Paste the exact question, a section of your notes, or the part you are stuck on…"></textarea></details></form>
+                  <form class="chat-form" id="chat-form"><input name="text" type="text" maxlength="500" placeholder="Message your group" autocomplete="off" aria-label="Message" /><button class="button button-dark" type="submit">Send</button></form>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="panel" data-panel="community" id="community-panel" hidden></div>
 
           <div class="panel" data-panel="exams" hidden>
             <form class="inline-form" id="exam-form">
@@ -237,40 +238,35 @@
       </section>
 
       <section class="resources-section" id="resources">
-        <div class="resources-heading"><div><span class="eyebrow"><span></span> THE STUDYGROUP ACADEMY LIBRARY</span><h2>Learn it here.<br /><span>All in one place.</span></h2></div><p>Explore original notes, practice sets, quizzes, worksheets and past papers. Resources are organised by subject, topic and type.</p></div>
-        <div class="academy-library" id="academy-library">
-          <div class="library-controls"><label>Subject<select id="library-subject"><option value="all">All GCSE subjects</option></select></label><label>Resource type<select id="library-type"><option value="all">Everything</option><option value="notes">Notes</option><option value="past-papers">Past papers</option><option value="quizzes">Quizzes</option><option value="worksheets">Worksheets</option><option value="videos">Videos</option></select></label><input id="library-search" type="search" placeholder="Search topics and resources" aria-label="Search the library" /></div>
-          <div id="library-results" class="library-results"><div class="library-empty">The library structure is ready. Add original resources under the <code>content/</code> directory to publish them here.</div></div>
+        <div class="resources-heading"><div><span class="eyebrow"><span></span> A FEW GOOD PLACES TO START</span><h2>Free resources.<br /><span>Picked with purpose.</span></h2></div><p>We point you towards established revision sites. We'll keep learning from students about what's genuinely useful, and build from there.</p></div>
+        <div class="resource-tools"><div class="filter-row"><button class="chip is-active" type="button" data-resource-filter="all">All</button><button class="chip" type="button" data-resource-filter="maths">Maths</button><button class="chip" type="button" data-resource-filter="science">Science</button><button class="chip" type="button" data-resource-filter="english">English</button><button class="chip" type="button" data-resource-filter="humanities">Humanities</button><button class="chip" type="button" data-resource-filter="languages">Languages</button></div><input class="resource-search" id="resource-search" type="search" placeholder="Search resources" aria-label="Search resources" /></div>
+        <div class="resource-picks" id="resource-picks">
+          <a class="resource-pick pick-maths" data-subjects="maths" href="https://www.mathsgenie.co.uk/gcse.html" target="_blank" rel="noopener noreferrer"><span class="pick-topline"><span>M</span> MATHEMATICS</span><strong>Maths Genie</strong><p>Topic notes, questions and past papers to practise at your pace.</p><span class="pick-bottom">Browse GCSE maths <b>↗</b></span><span class="pick-decoration">∑</span></a>
+          <a class="resource-pick pick-science" data-subjects="maths science" href="https://www.physicsandmathstutor.com/" target="_blank" rel="noopener noreferrer"><span class="pick-topline"><span>P</span> SCIENCE & MORE</span><strong>Physics & Maths Tutor</strong><p>Notes, questions and revision materials across GCSE subjects.</p><span class="pick-bottom">Explore free resources <b>↗</b></span><span class="pick-decoration">⚛</span></a>
+          <a class="resource-pick pick-bitesize" data-subjects="maths science english humanities languages" href="https://www.bbc.co.uk/bitesize/levels/z98jmp3" target="_blank" rel="noopener noreferrer"><span class="pick-topline"><span>B</span> ALL-ROUND REVISION</span><strong>BBC Bitesize</strong><p>Friendly explainers, revision guides and videos for GCSE learning.</p><span class="pick-bottom">Explore GCSE Bitesize <b>↗</b></span><span class="pick-decoration">▶</span></a>
+          <a class="resource-pick pick-maths" data-subjects="maths" href="https://corbettmaths.com/" target="_blank" rel="noopener noreferrer"><span class="pick-topline"><span>C</span> MATHEMATICS</span><strong>Corbettmaths</strong><p>Short videos, worksheets and practice questions for every maths topic.</p><span class="pick-bottom">Browse Corbettmaths <b>↗</b></span><span class="pick-decoration">÷</span></a>
+          <a class="resource-pick pick-science" data-subjects="maths science english humanities languages" href="https://www.thenational.academy/" target="_blank" rel="noopener noreferrer"><span class="pick-topline"><span>O</span> FREE LESSONS</span><strong>Oak National Academy</strong><p>Free classroom lessons with videos, quizzes and worksheets.</p><span class="pick-bottom">Explore Oak lessons <b>↗</b></span><span class="pick-decoration">✿</span></a>
+          <a class="resource-pick pick-bitesize" data-subjects="science humanities" href="https://cognitoedu.org/" target="_blank" rel="noopener noreferrer"><span class="pick-topline"><span>C</span> VIDEO LESSONS</span><strong>Cognito</strong><p>Clear video lessons and quizzes for science, maths and humanities.</p><span class="pick-bottom">Watch Cognito lessons <b>↗</b></span><span class="pick-decoration">◎</span></a>
+          <a class="resource-pick pick-maths" data-subjects="maths science english humanities languages" href="https://senecalearning.com/" target="_blank" rel="noopener noreferrer"><span class="pick-topline"><span>S</span> PRACTICE & RECALL</span><strong>Seneca Learning</strong><p>Courses and quizzes that help new facts stick. Has a free tier.</p><span class="pick-bottom">Try Seneca <b>↗</b></span><span class="pick-decoration">✳</span></a>
         </div>
-        <p class="resource-disclaimer">Resources are organised by exam board where available. Always check the specification for your course.</p>
+        <p class="resource-empty" id="resource-empty" hidden>No resources match that yet. Try another subject or clear the search.</p>
+        <p class="resource-disclaimer">These are independent third-party resources. StudyGroup is not affiliated with or endorsed by their providers. Always check that material matches your exam board.</p>
       </section>
 
     </main>
 
-        <footer class="site-footer"><a class="brand footer-brand" href="./"><img src="../assets/wordmark.png" alt="StudyGroup Academy" /></a><span>Built for curious minds, one student at a time.</span><span>Your nickname stays yours <b>✳</b></span></footer>
+        <footer class="site-footer"><a class="brand footer-brand" href="./"><img src="../assets/wordmark.png" alt="StudyGroup" /></a><span>Built for curious minds, one student at a time.</span><span>Your nickname stays yours <b>✳</b></span></footer>
 
-    <dialog class="app-dialog settings-dialog" id="profile-dialog" aria-labelledby="profile-title">
+    <dialog class="app-dialog" id="profile-dialog" aria-labelledby="profile-title">
       <form class="dialog-form" id="profile-form">
         <button class="dialog-close" type="button" data-close-dialog aria-label="Close dialog">×</button>
         <div class="dialog-mark"><img src="../assets/favicon.png" alt="" /></div>
         <span class="eyebrow"><span></span> YOUR ACCOUNT, YOUR CALL</span>
-        <h2 id="profile-title">Account & profile settings.</h2><p class="dialog-intro" id="profile-intro">Manage your account and profile in Settings. Friend discovery only uses your leaderboard nickname.</p>
+        <h2 id="profile-title">Make yourself at home.</h2><p class="dialog-intro" id="profile-intro">Choose the nickname students see. Your email stays private.</p>
         <div class="auth-error" id="profile-error" role="alert" hidden></div>
         <label>Your study nickname<input name="nickname" type="text" minlength="2" maxlength="24" autocomplete="nickname" pattern="[A-Za-z0-9 _.-]{2,24}" required /></label>
         <label class="opt-in-field"><input name="leaderboardOptIn" type="checkbox" /><span><strong>Show my nickname on the leaderboard</strong><small>One friendly daily check-in. Opt out whenever you like.</small></span></label>
-        <section class="settings-section" aria-labelledby="public-settings-title">
-          <span class="eyebrow">PROFILE CUSTOMISATION</span>
-          <h3 id="public-settings-title">Your student page</h3>
-          <p class="settings-help">Choose a unique username for your profile link. Your email is never displayed.</p>
-          <div class="settings-grid">
-            <label>Public profile URL username<input id="public-username" name="publicUsername" minlength="3" maxlength="20" pattern="[a-z0-9_]{3,20}" placeholder="your_username" /></label>
-            <label>Profile colour<select id="public-theme" name="publicTheme"><option value="paper">Warm paper</option><option value="mint">Mint</option><option value="lavender">Lavender</option><option value="sky">Sky</option></select></label>
-          </div>
-          <label class="settings-bio-label">Bio<textarea id="public-bio" name="publicBio" maxlength="240" rows="3" placeholder="What are you learning? What are you interested in?"></textarea></label>
-          <div class="settings-profile-actions"><button class="button button-dark" type="button" id="save-public-profile">Save public profile</button><button class="button button-light" type="button" id="unpublish-profile">Unpublish</button></div>
-          <p class="muted" id="profile-url-hint">Choose a username to create your public page.</p>
-        </section>
-        <button class="button button-dark dialog-submit" type="submit" formnovalidate>Save account settings <span>→</span></button>
+        <button class="button button-dark dialog-submit" type="submit">Save my preferences <span>→</span></button>
       </form>
     </dialog>
 
