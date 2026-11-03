@@ -20,7 +20,6 @@ import { clearData, initInsights, setData } from "./insights.js";
 import { startGrades, stopGrades } from "./grades.js";
 import { startNotes, stopNotes } from "./notes.js";
 import { addWeeklyMinutes } from "./session.js";
-import { initZipMath } from "./zip-math.js";
 import {
   computeStats,
   dateKey,
@@ -114,8 +113,6 @@ function renderStats() {
 function sortTasks(tasks) {
   return tasks.slice().sort((first, second) => {
     if (first.done !== second.done) return first.done ? 1 : -1;
-    const priority = { high: 0, normal: 1, low: 2 };
-    if ((priority[first.priority] ?? 1) !== (priority[second.priority] ?? 1)) return (priority[first.priority] ?? 1) - (priority[second.priority] ?? 1);
     const firstDue = first.due || "9999-12-31";
     const secondDue = second.due || "9999-12-31";
     if (firstDue !== secondDue) return firstDue < secondDue ? -1 : 1;
@@ -129,9 +126,6 @@ function renderTasks() {
   $$("[data-task-filter]").forEach((chip) => chip.classList.toggle("is-active", chip.dataset.taskFilter === filter));
   $("#clear-done").hidden = !ws.tasks.some((task) => task.done);
   const list = $("#task-list");
-  const planned = ws.tasks.filter(task => !task.done).reduce((sum, task) => sum + (Number(task.minutes) || 25), 0);
-  const plannedNode = $("#planner-remaining");
-  if (plannedNode) plannedNode.textContent = planned >= 60 ? `${Math.floor(planned / 60)}h ${planned % 60 ? `${planned % 60}m` : ""}`.trim() : `${planned} min`;
   if (visible.length === 0) {
     list.innerHTML = emptyMarkup("✳", "Nothing here yet", filter === "done" ? "Finished tasks will show up here." : "Add a task above to plan your next small step.");
     return;
@@ -140,7 +134,7 @@ function renderTasks() {
     const overdue = !task.done && task.due && describeDue(task.due).startsWith("Overdue");
     return `<div class="item task${task.done ? " is-done" : ""}${overdue ? " is-overdue" : ""}">
       <button class="check" type="button" data-task-toggle="${task.id}" aria-label="${task.done ? "Mark as not done" : "Mark as done"}">${task.done ? "✓" : ""}</button>
-      <div class="item-main"><strong>${escapeHTML(task.title)}</strong><small>${escapeHTML(task.subject)} · ${escapeHTML(describeDue(task.due))} · ${Number(task.minutes) || 25} min · ${escapeHTML(task.priority || "normal")} priority</small></div>
+      <div class="item-main"><strong>${escapeHTML(task.title)}</strong><small>${escapeHTML(task.subject)} · ${escapeHTML(describeDue(task.due))}</small></div>
       <button class="icon-btn" type="button" data-task-delete="${task.id}" aria-label="Delete task">×</button>
     </div>`;
   }).join("");
@@ -604,15 +598,11 @@ function bindOnce() {
         title,
         subject: form.elements.subject.value,
         due: form.elements.due.value || "",
-        priority: form.elements.priority?.value || "normal",
-        minutes: Number(form.elements.minutes?.value) || 25,
         done: false,
         createdAt: serverTimestamp()
       });
       form.elements.title.value = "";
       form.elements.due.value = "";
-      if (form.elements.priority) form.elements.priority.value = "normal";
-      if (form.elements.minutes) form.elements.minutes.value = "25";
       form.elements.title.focus();
     }, event.submitter);
   });
@@ -880,7 +870,6 @@ export function startWorkspace() {
   });
   startNotes();
   startGrades();
-  initZipMath();
   setMode("focus");
   let saved = "overview";
   try {

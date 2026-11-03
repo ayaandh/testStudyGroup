@@ -49,7 +49,6 @@
           <div class="tabs" role="tablist" aria-label="Workspace tools">
             <button class="tab is-active" type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
             <button class="tab" type="button" role="tab" data-tab="planner" aria-selected="false">Planner</button>
-            <button class="tab" type="button" role="tab" data-tab="zip-math" aria-selected="false">Zip Math</button>
             <button class="tab" type="button" role="tab" data-tab="timer" aria-selected="false">Focus timer</button>
             <button class="tab" type="button" role="tab" data-tab="cards" aria-selected="false">Flashcards</button>
             <button class="tab" type="button" role="tab" data-tab="notes" aria-selected="false">Notes</button>
@@ -76,16 +75,12 @@
           </div>
 
           <div class="panel" data-panel="planner" hidden>
-            <div class="planner-intro"><div><span class="eyebrow"><span></span> YOUR STUDY PLAN</span><h3>Make the next step clear.</h3><p>Break revision into manageable sessions. Add a subject, deadline and time estimate to keep your week realistic.</p></div><div class="planner-summary"><strong id="planner-remaining">0 min</strong><small>planned study time</small></div></div>
-            <form class="inline-form planner-form" id="task-form">
-              <input name="title" type="text" maxlength="120" placeholder="e.g. Practise simultaneous equations" aria-label="Task" required />
+            <form class="inline-form" id="task-form">
+              <input name="title" type="text" maxlength="120" placeholder="What do you need to get done?" aria-label="Task" required />
               <select name="subject" data-subjects aria-label="Subject"></select>
               <input name="due" type="date" aria-label="Due date" />
-              <select name="priority" aria-label="Priority"><option value="normal">Normal priority</option><option value="high">High priority</option><option value="low">Low priority</option></select>
-              <select name="minutes" aria-label="Estimated minutes"><option value="15">15 min</option><option value="25" selected>25 min</option><option value="40">40 min</option><option value="60">60 min</option><option value="90">90 min</option></select>
-              <button class="button button-dark" type="submit">Add to plan</button>
+              <button class="button button-dark" type="submit">Add task</button>
             </form>
-            <div class="planner-guidance"><span>✳</span><span><strong>Planning tip</strong> Aim for focused blocks with short breaks. A smaller plan you can finish beats an overloaded one.</span></div>
             <div class="filter-row">
               <button class="chip is-active" type="button" data-task-filter="all">All</button>
               <button class="chip" type="button" data-task-filter="active">To do</button>
@@ -94,14 +89,6 @@
             </div>
             <div class="item-list" id="task-list"></div>
           </div>
-
-          <section class="panel zip-math-panel" id="zip-math" data-panel="zip-math" hidden>
-            <div class="zip-hero"><div><span class="eyebrow"><span></span> STUDYGROUP ACADEMY · MATHS PRACTICE</span><h2>Zip <em>Math</em></h2><p>Short, focused GCSE maths practice. Questions are generated in your browser from built-in maths rules. No AI and no copied question bank.</p></div><div class="zip-mark">∑</div></div>
-            <div class="zip-stats"><div><strong id="zip-attempts">0</strong><small>attempts</small></div><div><strong id="zip-correct">0</strong><small>correct</small></div><div><strong id="zip-rate">—</strong><small>accuracy</small></div><div><strong id="zip-streak">0</strong><small>correct streak</small></div></div>
-            <div class="zip-practice-layout"><aside class="zip-controls"><h3>Build your practice</h3><label>Topic<select id="zip-topic"></select></label><label>Tier<select id="zip-tier"><option value="foundation">Foundation-style</option><option value="higher">Higher-style</option></select></label><button class="button button-dark" id="zip-new-set" type="button">New question</button><p>Choose a topic or use mixed practice. Each question has a worked method after you submit.</p></aside>
-              <div class="zip-question-card"><div class="zip-question-top"><span>YOUR QUESTION</span><span id="zip-question-topic">Number</span></div><h3 id="zip-question">Loading a question…</h3><label class="zip-answer-label" for="zip-answer">Your answer</label><div class="zip-answer-row"><input id="zip-answer" type="text" autocomplete="off" placeholder="Type your answer" /><button class="button button-dark" id="zip-submit" type="button">Check answer</button></div><button class="zip-text-button" id="zip-reveal" type="button">Show answer and method</button><div id="zip-feedback" class="zip-feedback" hidden><strong id="zip-feedback-title"></strong><p id="zip-feedback-copy"></p></div><div id="zip-worked" class="zip-worked" hidden></div><button class="button button-dark" id="zip-next" type="button" hidden>Next question →</button></div>
-            </div><p class="zip-disclaimer">Zip Math is an early practice engine. It currently covers selected number, fractions, percentages, ratio, algebra, sequences, geometry and probability skills. It is not yet a complete GCSE specification or a replacement for full exam papers.</p>
-          </section>
 
           <div class="panel" data-panel="timer" hidden>
             <div class="timer-layout">
