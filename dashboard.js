@@ -22,6 +22,8 @@ import {
   takeWelcomeFlag
 } from "./session.js";
 import { exportData, startWorkspace, stopWorkspace } from "./workspace.js";
+import { initCommunity, loadCommunityProfile } from "./community.js";
+import "./library.js";
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const profileDialog = $("#profile-dialog");
@@ -104,10 +106,12 @@ async function loadUser(user) {
     const profile = await ensureUserProfile(user);
     if (token !== loadToken) return;
     state.profile = profile;
+    initCommunity();
     renderAccount();
     revealPage();
     startWorkspace();
     await refreshBoard();
+    await loadCommunityProfile();
     showBanner(`Welcome${profile.displayName ? `, ${profile.displayName}` : ""}. Your account is ready.`);
     if (takeWelcomeFlag()) openProfileDialog(true);
   } catch (error) {
@@ -251,6 +255,7 @@ $("#daily-checkin").addEventListener("click", async () => {
 });
 
 document.addEventListener("studygroup:tab", (event) => {
+  if (event.detail === "community" && state.profile) loadCommunityProfile();
   if (event.detail === "leaderboard" && state.profile && Date.now() - lastBoardLoad > 20000) refreshBoard();
 });
 

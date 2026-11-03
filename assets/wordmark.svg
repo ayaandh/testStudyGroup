@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 48" role="img" aria-label="StudyGroup Academy">
+  <rect x="1" y="5" width="38" height="38" rx="11" fill="#26251f"/>
+  <path d="M12 17h16M12 24h11M12 31h16" fill="none" stroke="#f0a15d" stroke-width="3" stroke-linecap="round"/>
+  <text x="50" y="30" font-family="Manrope,Arial,sans-serif" font-size="23" font-weight="800" fill="#26251f">StudyGroup</text>
+  <text x="190" y="30" font-family="Manrope,Arial,sans-serif" font-size="15" font-weight="700" fill="#bd7440">ACADEMY</text>
+</svg>

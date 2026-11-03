@@ -1,18 +1,13 @@
 export const SUBJECTS = [
-  "General",
-  "Maths",
-  "English Language",
-  "English Literature",
-  "Biology",
-  "Chemistry",
-  "Physics",
-  "Combined Science",
-  "History",
-  "Geography",
-  "Computer Science",
-  "Languages",
-  "Religious Studies",
-  "Other"
+  "General", "Mathematics", "English Language", "English Literature",
+  "Biology", "Chemistry", "Physics", "Combined Science", "Astronomy",
+  "History", "Geography", "Computer Science", "Religious Studies",
+  "French", "Spanish", "German", "Italian", "Mandarin Chinese", "Urdu",
+  "Art and Design", "Photography", "Design and Technology", "Food Preparation & Nutrition",
+  "Drama", "Music", "Dance", "Media Studies", "Film Studies",
+  "Business", "Economics", "Statistics", "Citizenship Studies",
+  "Physical Education", "Psychology", "Sociology", "Classical Civilisation",
+  "Latin", "Ancient Greek", "Electronics", "Engineering", "Environmental Science"
 ];
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

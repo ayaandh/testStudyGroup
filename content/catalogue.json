@@ -1,0 +1,13 @@
+{
+  "resources": [],
+  "schema": {
+    "subject": "English Literature",
+    "type": "past-papers",
+    "title": "Paper 1",
+    "topic": "Modern texts",
+    "year": 2025,
+    "examBoard": "AQA",
+    "path": "/content/english-literature/past-papers/2025/paper-1.pdf",
+    "rights": "Record source and redistribution permission before publishing"
+  }
+}

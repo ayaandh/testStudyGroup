@@ -16,6 +16,7 @@ function applyResourceFilter() {
 }
 
 export function initResourceFilter() {
+  if (!$("#resource-search") || !$("#resource-picks")) return;
   $$("[data-resource-filter]").forEach((chip) => {
     chip.addEventListener("click", () => {
       $$("[data-resource-filter]").forEach((other) => other.classList.toggle("is-active", other === chip));

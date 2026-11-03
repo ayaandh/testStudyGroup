@@ -73,7 +73,7 @@ export function getErrorMessage(error) {
     "auth/invalid-credential": "We couldn't sign you in with those details. Double-check your email and password.",
     "auth/wrong-password": "We couldn't sign you in with those details. Double-check your email and password.",
     "auth/user-not-found": "We couldn't sign you in with those details. Double-check your email and password.",
-    "auth/user-disabled": "This account is currently disabled. Please contact StudyGroup support.",
+    "auth/user-disabled": "This account is currently disabled. Please contact StudyGroup Academy support.",
     "auth/weak-password": "Choose a stronger password with at least six characters.",
     "auth/too-many-requests": "Too many attempts. Take a little break and try again later.",
     "auth/network-request-failed": "We couldn't reach Firebase. Check your internet connection and try again.",

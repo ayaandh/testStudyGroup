@@ -240,7 +240,8 @@ function renderMessages(items) {
   box.innerHTML = ordered.length
     ? ordered.map((message) => `<div class="msg${message.uid === state.user.uid ? " mine" : ""}">
         <small>${escapeHTML(message.name)}${message.date ? ` · ${formatTime(message.date)}` : ""}</small>
-        <p>${escapeHTML(message.text)}</p>
+        ${message.text ? `<p>${escapeHTML(message.text)}</p>` : ""}
+        ${message.attachmentText ? `<div class="shared-attachment"><small>SHARED QUESTION / NOTES</small><p>${escapeHTML(message.attachmentText)}</p></div>` : ""}
       </div>`).join("")
     : '<div class="chat-hint">No messages yet. Say hello to your group.</div>';
   if (nearBottom || ws.chatFirstRender) box.scrollTop = box.scrollHeight;
@@ -382,7 +383,7 @@ function renderTimer() {
   $("#timer-ring").style.setProperty("--progress", `${((timer.total - remaining) / timer.total) * 100}%`);
   $("#timer-ring").dataset.mode = timer.mode;
   $("#timer-log").hidden = timer.mode !== "focus";
-  document.title = timer.running ? `${clock} ${label} | StudyGroup` : baseTitle;
+  document.title = timer.running ? `${clock} ${label} | StudyGroup Academy` : baseTitle;
 }
 
 function setMode(mode) {
@@ -822,13 +823,16 @@ function bindOnce() {
     event.preventDefault();
     const form = event.currentTarget;
     const text = form.elements.text.value.trim();
-    if (!text || !ws.activeGroupId || !state.user) return;
+    const attachmentText = form.elements.attachmentText.value.trim();
+    if ((!text && !attachmentText) || !ws.activeGroupId || !state.user) return;
     form.elements.text.value = "";
+    form.elements.attachmentText.value = "";
     run(async () => {
       await addDoc(collection(db, "groups", ws.activeGroupId, "messages"), {
         uid: state.user.uid,
         name: state.profile?.displayName || "Study buddy",
         text: text.slice(0, 500),
+        attachmentText: attachmentText.slice(0, 3500),
         createdAt: serverTimestamp()
       });
     });

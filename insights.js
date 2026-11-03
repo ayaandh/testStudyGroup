@@ -14,6 +14,9 @@ const store = { tasks: [], sessions: [], decks: [], exams: [], groups: [], notes
 let primed = false;
 let lastToday = 0;
 let bound = false;
+let latestUnlocked = [];
+
+export function getUnlockedBadgeTitles() { return latestUnlocked.slice(); }
 
 function currentGoal() {
   const goal = Number(state.profile?.dailyGoal);
@@ -68,6 +71,7 @@ export function renderInsights() {
     scores: store.scores
   });
   const unlocked = badges.filter((badge) => badge.unlocked);
+  latestUnlocked = unlocked.map((badge) => badge.title);
   const next = badges.find((badge) => !badge.unlocked);
   $("#overview-badges").innerHTML = `<div class="mini-row"><strong>${unlocked.length} of ${badges.length} unlocked</strong>${next ? `<small>Next: ${escapeHTML(next.title)} (${escapeHTML(next.progress)})</small>` : "<small>You have them all</small>"}</div>`;
   $("#badge-summary").textContent = `${unlocked.length} of ${badges.length} badges unlocked`;
