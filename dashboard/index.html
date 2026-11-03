@@ -17,7 +17,7 @@
   </head>
   <body class="checking">
     <header class="site-header">
-      <a class="brand" href="./" aria-label="StudyGroup Academy dashboard"><img src="../assets/wordmark.svg" alt="StudyGroup Academy" /></a>
+      <a class="brand" href="./" aria-label="StudyGroup Academy dashboard"><img src="../assets/wordmark.png" alt="StudyGroup Academy" /></a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="#workspace">My workspace</a>
         <a href="#resources">Free resources</a>
@@ -27,7 +27,7 @@
           <button class="user-chip" id="account-toggle" type="button" aria-expanded="false"><span class="user-chip-avatar" id="header-initial">S</span><span id="header-name">Student</span><span class="chevron">⌄</span></button>
           <div class="account-popover" id="account-popover" hidden>
             <div class="account-email" id="account-email"></div>
-            <button type="button" data-open-settings>Edit your profile</button>
+            <button type="button" data-open-settings>Settings</button>
             <button type="button" id="download-data">Download my data</button>
             <button type="button" id="sign-out">Log out</button>
           </div>
@@ -49,6 +49,7 @@
           </div>
           <div class="tabs" role="tablist" aria-label="Workspace tools">
             <button class="tab is-active" type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+            <button class="tab" type="button" role="tab" data-tab="practice" aria-selected="false">Maths practice</button>
             <button class="tab" type="button" role="tab" data-tab="planner" aria-selected="false">Planner</button>
             <button class="tab" type="button" role="tab" data-tab="timer" aria-selected="false">Focus timer</button>
             <button class="tab" type="button" role="tab" data-tab="cards" aria-selected="false">Flashcards</button>
@@ -74,6 +75,13 @@
               <div class="card"><h3>Badges</h3><div id="overview-badges"></div></div>
               <div class="card quote-card"><span>✳</span><p id="quote-text"></p></div>
             </div>
+          </div>
+
+          <div class="panel maths-practice-panel" data-panel="practice" id="maths-practice" hidden>
+            <div class="practice-heading"><div><span class="eyebrow"><span></span> THE STUDYGROUP QUESTION ENGINE</span><h2>Practise. <em>Understand.</em> Improve.</h2><p>Fresh GCSE Maths questions generated instantly from curriculum-aligned templates. No AI, no external question bank. Start with core skills and build up your confidence.</p></div><div class="practice-score"><strong id="maths-score">0 / 0 correct</strong><small>Your score this session</small></div></div>
+            <div class="practice-controls"><label>Topic<select id="maths-topic"><option>Mixed</option><option>Number</option><option>Fractions</option><option>Algebra</option><option>Ratio and proportion</option><option>Geometry</option><option>Measures</option><option>Statistics</option><option>Probability</option></select></label><label>Tier<select id="maths-tier"><option>Foundation</option><option>Higher</option></select></label><span class="practice-syllabus">GCSE Mathematics · Core syllabus skills</span></div>
+            <article class="maths-question-card"><div class="maths-question-top"><span id="maths-question-topic">Number · GCSE Foundation</span><span class="question-spark">✳</span></div><h3 id="maths-question-text">Loading your first question…</h3><label class="maths-answer-label">Your answer<input id="maths-answer" inputmode="decimal" autocomplete="off" placeholder="Type your answer" /></label><div class="maths-question-actions"><button class="button button-dark" id="maths-check" type="button">Check answer</button><button class="button button-light" id="maths-new-question" type="button">Next question ↗</button><button class="button button-quiet" id="maths-reveal" type="button">Show method</button><button class="button button-light" id="maths-share-question" type="button">Copy question to share</button></div><p id="maths-feedback" class="maths-feedback" aria-live="polite"></p><div id="maths-working" class="maths-working" hidden></div><p id="maths-share-status" class="maths-share-status" aria-live="polite"></p></article>
+            <p class="practice-footnote">Questions are generated locally from deterministic templates, not AI. This is an early GCSE Maths practice engine; topic coverage will expand across Foundation and Higher specifications and should be checked against your exam board.</p>
           </div>
 
           <div class="panel" data-panel="planner" hidden>
@@ -239,18 +247,30 @@
 
     </main>
 
-        <footer class="site-footer"><a class="brand footer-brand" href="./"><img src="../assets/wordmark.svg" alt="StudyGroup Academy" /></a><span>Built for curious minds, one student at a time.</span><span>Your nickname stays yours <b>✳</b></span></footer>
+        <footer class="site-footer"><a class="brand footer-brand" href="./"><img src="../assets/wordmark.png" alt="StudyGroup Academy" /></a><span>Built for curious minds, one student at a time.</span><span>Your nickname stays yours <b>✳</b></span></footer>
 
-    <dialog class="app-dialog" id="profile-dialog" aria-labelledby="profile-title">
+    <dialog class="app-dialog settings-dialog" id="profile-dialog" aria-labelledby="profile-title">
       <form class="dialog-form" id="profile-form">
         <button class="dialog-close" type="button" data-close-dialog aria-label="Close dialog">×</button>
         <div class="dialog-mark"><img src="../assets/favicon.png" alt="" /></div>
         <span class="eyebrow"><span></span> YOUR ACCOUNT, YOUR CALL</span>
-        <h2 id="profile-title">Make yourself at home.</h2><p class="dialog-intro" id="profile-intro">Choose the nickname students see. Your email stays private.</p>
+        <h2 id="profile-title">Account & profile settings.</h2><p class="dialog-intro" id="profile-intro">Manage your account and profile in Settings. Friend discovery only uses your leaderboard nickname.</p>
         <div class="auth-error" id="profile-error" role="alert" hidden></div>
         <label>Your study nickname<input name="nickname" type="text" minlength="2" maxlength="24" autocomplete="nickname" pattern="[A-Za-z0-9 _.-]{2,24}" required /></label>
         <label class="opt-in-field"><input name="leaderboardOptIn" type="checkbox" /><span><strong>Show my nickname on the leaderboard</strong><small>One friendly daily check-in. Opt out whenever you like.</small></span></label>
-        <button class="button button-dark dialog-submit" type="submit">Save my preferences <span>→</span></button>
+        <section class="settings-section" aria-labelledby="public-settings-title">
+          <span class="eyebrow">PROFILE CUSTOMISATION</span>
+          <h3 id="public-settings-title">Your student page</h3>
+          <p class="settings-help">Choose a unique username for your profile link. Your email is never displayed.</p>
+          <div class="settings-grid">
+            <label>Public profile URL username<input id="public-username" name="publicUsername" minlength="3" maxlength="20" pattern="[a-z0-9_]{3,20}" placeholder="your_username" /></label>
+            <label>Profile colour<select id="public-theme" name="publicTheme"><option value="paper">Warm paper</option><option value="mint">Mint</option><option value="lavender">Lavender</option><option value="sky">Sky</option></select></label>
+          </div>
+          <label class="settings-bio-label">Bio<textarea id="public-bio" name="publicBio" maxlength="240" rows="3" placeholder="What are you learning? What are you interested in?"></textarea></label>
+          <div class="settings-profile-actions"><button class="button button-dark" type="button" id="save-public-profile">Save public profile</button><button class="button button-light" type="button" id="unpublish-profile">Unpublish</button></div>
+          <p class="muted" id="profile-url-hint">Choose a username to create your public page.</p>
+        </section>
+        <button class="button button-dark dialog-submit" type="submit" formnovalidate>Save account settings <span>→</span></button>
       </form>
     </dialog>
 

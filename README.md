@@ -11,7 +11,12 @@ StudyGroup Academy is a static GCSE learning and student-community app built wit
 - Expanded GCSE subject selector including languages, arts, creative subjects, humanities and vocational/technical options.
 - An in-app Academy library catalogue for original notes, quizzes, worksheets, videos and past papers.
 - A PDF reader using PDF.js that extracts selectable PDF text into accessible HTML and keeps a direct download link to the original PDF.
-- New minimal StudyGroup Academy wordmark.
+- PNG-first StudyGroup Academy branding with the supplied `assets/watwermark.png` used as a subtle header/footer watermark.
+- A no-AI GCSE Mathematics question generator with parameterised questions, automatic marking and worked methods across selected Number, Algebra, Ratio, Geometry, Statistics and Probability skills. It is an initial syllabus-mapped maths practice engine, not yet complete coverage of every exam-board topic.
+
+## GCSE maths question engine
+
+Open the **Maths practice** tab in the dashboard. Questions are generated locally in JavaScript from deterministic curriculum-aligned templates; no AI service or question API is called. Foundation and Higher tiers are offered, with instant marking and a worked method. The first release covers a subset of common GCSE Mathematics skills and should be expanded and reviewed against each exam-board specification before being described as complete coverage.
 
 ## Firebase setup and deployment
 

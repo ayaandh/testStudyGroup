@@ -21,18 +21,15 @@ export function initCommunity() {
   root.dataset.ready = "1";
   root.innerHTML = `
     <div class="community-grid">
-      ${card("Your public profile", `<form id="public-profile-form" class="stack-form"><label>Username <span class="muted">3–20 letters, numbers or underscores</span><input name="username" minlength="3" maxlength="20" pattern="[a-z0-9_]{3,20}" placeholder="ayaan_dev" required /></label><label>Bio <textarea name="bio" maxlength="240" rows="3" placeholder="What are you learning? What are you into?"></textarea></label><label>Profile colour <select name="theme"><option value="paper">Warm paper</option><option value="mint">Mint</option><option value="lavender">Lavender</option><option value="sky">Sky</option></select></label><div class="profile-form-actions"><button class="button button-dark">Save public profile</button><button class="button button-light" type="button" id="unpublish-profile">Unpublish profile</button></div><p class="muted" id="profile-url-hint">Choose a username to create your public page.</p></form>`)}
-      ${card("Find students", `<form id="people-search-form" class="inline-form"><input name="username" placeholder="Search exact username" maxlength="20" required /><button class="button button-dark">Find</button></form><div id="people-result" class="community-list"></div><h4>Friend requests</h4><div id="friend-requests" class="community-list"></div><h4>Your friends</h4><div id="friends-list" class="community-list"></div>`)}
+      ${card("Find students", `<p class="muted">Search using the exact nickname shown on the leaderboard. Only students who opted into the leaderboard are discoverable. Profile editing lives in Settings, never in this section.</p><form id="people-search-form" class="inline-form"><input name="username" placeholder="Enter a leaderboard nickname" maxlength="24" required /><button class="button button-dark">Find students</button></form><div id="people-result" class="community-list"></div><h4>Friend requests</h4><div id="friend-requests" class="community-list"></div><h4>Your friends</h4><div id="friends-list" class="community-list"></div>`)}
       ${card("Direct messages", `<div class="dm-layout"><div id="dm-friends" class="community-list"><p class="muted">Add a friend to start a private conversation.</p></div><div class="dm-room"><div id="dm-title" class="muted">Choose a friend</div><div id="dm-messages" class="dm-messages"></div><form id="dm-form" class="chat-form"><input name="text" maxlength="1000" placeholder="Write a message…" autocomplete="off" /><button class="button button-dark">Send</button><details class="chat-attach"><summary>Attach a question or notes</summary><textarea name="attachmentText" maxlength="3500" rows="3" placeholder="Paste the exact question or notes you want help with…"></textarea></details></form></div></div>`)}
     </div>`;
 
-  const profileForm = $("#public-profile-form");
-  profileForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    const username = clean(profileForm.elements.username.value).toLowerCase();
-    const bio = clean(profileForm.elements.bio.value);
-    const theme = profileForm.elements.theme.value;
-    if (!usernameOK(username)) return showToast("Use 3–20 lowercase letters, numbers or underscores. That name may also be reserved.");
+  const savePublicProfile = async () => {
+    const username = clean($("#public-username").value).toLowerCase().replace(/^@/, "");
+    const bio = clean($("#public-bio").value);
+    const theme = $("#public-theme").value;
+    if (!usernameOK(username)) return showToast("Use 3–20 lowercase letters, numbers or underscores. Some names are reserved.");
     try {
       const old = state.profile?.username;
       const target = doc(db,"publicProfiles",username);
@@ -45,27 +42,29 @@ export function initCommunity() {
       $("#profile-url-hint").innerHTML = `Your public page: <a href="/${encodeURIComponent(username)}" target="_blank" rel="noopener">/${escapeHTML(username)}</a>`;
       showToast("Your public profile is saved.");
     } catch(err) { console.error(err); showToast("Couldn't save your profile. Check that the latest Firestore rules are deployed."); }
-  });
+  };
+  $("#save-public-profile").addEventListener("click", savePublicProfile);
 
   $("#unpublish-profile").addEventListener("click", async () => {
     if (!state.profile?.username) return showToast("You don't have a public profile yet.");
     try {
       await deleteDoc(doc(db,"publicProfiles",state.profile.username));
       state.profile = {...state.profile, username:null, bio:"", theme:"paper"};
-      profileForm.reset();
+      $("#public-username").value = ""; $("#public-bio").value = ""; $("#public-theme").value = "paper";
       $("#profile-url-hint").textContent="Your public profile is unpublished.";
       showToast("Your public profile is no longer visible.");
     } catch(err) { console.error(err); showToast("Couldn't unpublish your profile."); }
   });
 
   $("#people-search-form").addEventListener("submit", async e => {
-    e.preventDefault(); const username = clean(e.currentTarget.elements.username.value).toLowerCase();
-    const out = $("#people-result"); out.textContent = "Searching…";
+    e.preventDefault();
+    const entered = clean(e.currentTarget.elements.username.value).replace(/^@/, "");
+    const out = $("#people-result"); out.textContent = "Searching leaderboard nicknames…";
     try {
-      const matches = await getDocs(query(collection(db,"publicProfiles"),where("username",">=",username),where("username","<=",username+"\uf8ff"),orderBy("username"),limit(12)));
-      const people = matches.docs.map(d=>d.data()).filter(p=>p.uid!==state.user.uid);
-      if (!people.length) { out.textContent = "No public profiles match that username."; return; }
-      out.innerHTML = people.map(p=>`<div class="person-row"><span><b>${escapeHTML(p.displayName)}</b><small>@${escapeHTML(p.username)}</small></span><a href="/${encodeURIComponent(p.username)}">View profile</a><button class="button button-light" data-add-friend="${escapeHTML(p.uid)}" data-name="${escapeHTML(p.displayName)}">Add friend</button></div>`).join("");
+      const matches = await getDocs(query(collection(db,"publicLeaderboard"),where("displayName","==",entered),limit(12)));
+      const people = matches.docs.filter(item => item.id !== state.user.uid).map(item => ({uid:item.id,displayName:item.data().displayName||"Student"}));
+      if (!people.length) { out.textContent = "No leaderboard member found with that exact nickname. Check the spelling and spaces."; return; }
+      out.innerHTML = people.map(p=>`<div class="person-row"><span><b>${escapeHTML(p.displayName)}</b><small>Leaderboard member</small></span><button class="button button-light" data-add-friend="${escapeHTML(p.uid)}">Add friend</button></div>`).join("");
     } catch(err) { console.error(err); out.textContent = "Search failed. Try again."; }
   });
 
@@ -101,12 +100,22 @@ export function initCommunity() {
 }
 
 export async function loadCommunityProfile() {
-  const form = $("#public-profile-form"); if (!form || !state.profile) return;
-  if (state.profile.username) {
-    form.elements.username.value=state.profile.username; form.elements.bio.value=state.profile.bio||""; form.elements.theme.value=state.profile.theme||"paper";
-    $("#profile-url-hint").innerHTML=`Your public page: <a href="/${encodeURIComponent(state.profile.username)}" target="_blank" rel="noopener">/${escapeHTML(state.profile.username)}</a>`;
+  if (!state.profile) return;
+  const usernameInput = $("#public-username");
+  if (usernameInput) {
+    usernameInput.value=state.profile.username||"";
+    $("#public-bio").value=state.profile.bio||"";
+    $("#public-theme").value=state.profile.theme||"paper";
+    $("#profile-url-hint").innerHTML=state.profile.username
+      ? `Your public page: <a href="/${encodeURIComponent(state.profile.username)}" target="_blank" rel="noopener">/${escapeHTML(state.profile.username)}</a>`
+      : "Choose a username to create your public page.";
   }
   await refreshPeople();
+}
+
+async function findPublicProfile(uid) {
+  const snap=await getDocs(query(collection(db,"publicProfiles"),where("uid","==",uid),limit(1)));
+  return snap.docs[0]?.data()||null;
 }
 
 async function refreshPeople() {
@@ -117,16 +126,15 @@ async function refreshPeople() {
     getDocs(query(collection(db,"friendships"),where("participants","array-contains",uid),limit(100)))
   ]);
   const requests=[];
-  for (const snap of incoming.docs) { const d=snap.data(); const p=await getDoc(queryDoc("publicProfiles",d.senderUid)); requests.push(`<div class="person-row"><span><b>${escapeHTML(p.data()?.displayName||"Student")}</b><small>Friend request</small></span><button class="button button-light" data-accept-request="${snap.id}">Accept</button></div>`); }
-  for (const snap of outgoing.docs) requests.push(`<div class="person-row"><span><b>Request sent</b><small>${escapeHTML(snap.data().receiverUid.slice(0,8))}…</small></span></div>`);
+  for (const snap of incoming.docs) { const d=snap.data(); const p=await getDoc(doc(db,"publicLeaderboard",d.senderUid)); const publicProfile=await findPublicProfile(d.senderUid); requests.push(`<div class="person-row"><span><b>${escapeHTML(p.data()?.displayName||publicProfile?.displayName||"Student")}</b><small>${publicProfile?.username?"@"+escapeHTML(publicProfile.username):"Leaderboard member"}</small></span><button class="button button-light" data-accept-request="${snap.id}">Accept</button></div>`); }
+  for (const snap of outgoing.docs) { const target=snap.data().receiverUid; const p=await getDoc(doc(db,"publicLeaderboard",target)); requests.push(`<div class="person-row"><span><b>Request sent</b><small>${escapeHTML(p.data()?.displayName||"Leaderboard member")}</small></span></div>`); }
   $("#friend-requests").innerHTML=requests.join("")||'<p class="muted">No pending requests.</p>';
   const friends=friendships.docs.map(s=>s.data().participants.find(id=>id!==uid)).filter(Boolean);
   const unique=[...new Set(friends)]; const people=[];
-  for(const friendUid of unique){const p=await getDocs(query(collection(db,"publicProfiles"),where("uid","==",friendUid),limit(1))); const data=p.docs[0]?.data(); if(data) people.push(data);}
-  const html=people.map(p=>`<div class="person-row"><span><b>${escapeHTML(p.displayName)}</b><small>@${escapeHTML(p.username)}</small></span><a href="/${encodeURIComponent(p.username)}">Profile</a><button class="button button-light" data-open-dm="${escapeHTML(p.uid)}" data-name="${escapeHTML(p.displayName)}">Message</button></div>`).join("")||'<p class="muted">Your friends will appear here.</p>';
+  for(const friendUid of unique){const [data,board]=await Promise.all([findPublicProfile(friendUid),getDoc(doc(db,"publicLeaderboard",friendUid))]); const profile=data||{}; people.push({uid:friendUid,displayName:profile.displayName||board.data()?.displayName||"Student",username:profile.username||""});}
+  const html=people.map(p=>`<div class="person-row"><span><b>${escapeHTML(p.displayName)}</b><small>${p.username?"@"+escapeHTML(p.username):"Leaderboard member"}</small></span>${p.username?`<a href="/${encodeURIComponent(p.username)}">Profile</a>`:""}<button class="button button-light" data-open-dm="${escapeHTML(p.uid)}" data-name="${escapeHTML(p.displayName)}">Message</button></div>`).join("")||'<p class="muted">Your friends will appear here.</p>';
   $("#friends-list").innerHTML=html; $("#dm-friends").innerHTML=html;
 }
-function queryDoc(collectionName,id){return doc(db,collectionName,id);}
 
 async function openDM(friendUid,name){
   const id=chatIdFor(state.user.uid,friendUid); activeChat={id,friendUid};

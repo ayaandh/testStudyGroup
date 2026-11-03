@@ -23,6 +23,7 @@ import {
 } from "./session.js";
 import { exportData, startWorkspace, stopWorkspace } from "./workspace.js";
 import { initCommunity, loadCommunityProfile } from "./community.js";
+import { initMathsPractice } from "./maths-practice.js";
 import "./library.js";
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
@@ -262,6 +263,7 @@ document.addEventListener("studygroup:tab", (event) => {
 fillSubjectSelects();
 initResourceFilter();
 initLeaderboard(refreshBoard);
+initMathsPractice();
 
 window.setTimeout(() => {
   if (document.body.classList.contains("checking")) {
